@@ -33,8 +33,8 @@ layout (push_constant) uniform Push {
 
 
 vec3 getFaceNormal(vec3 position) {
-    vec3 dx = vec3(dFdx(position.x), dFdx(position.y), dFdx(position.z));
-    vec3 dy = vec3(dFdy(position.x), dFdy(position.y), dFdy(position.z));
+    vec3 dx = dFdx(position);
+    vec3 dy = dFdy(position);
     return normalize(cross(dy, dx));
 }
 
@@ -62,17 +62,17 @@ void main() {
     
     vec4 lightDirection = vec4(0.0f, -1.0f, 0.0f, 0.0f);
     vec4 lightSpecular = vec4(0.5f, 0.5f, 0.5f, 0.0f);
-    vec4 lightAmbient = vec4(0.5f, 0.5f, 0.5f, 0.0f);
+    vec4 lightAmbient = vec4(0.2f, 0.2f, 0.2f, 0.0f);
     vec4 lightDiffuse = vec4(1.0f, 1.0f, 1.0f, 0.0f);
     
     vec4 materialColor = vec4(1.0f, 0.0f, 0.0f, 1.0f);
-    vec4 materialAmbient =  vec4(0.5f, 0.5f, 0.5f, 0.0f);
+    vec4 materialAmbient =  vec4(0.2f, 0.2f, 0.2f, 0.0f);
     vec4 materialDiffuse = vec4(0.5f, 0.5f, 0.5f, 0.0f);
     vec4 materialSpecular = vec4(0.5f, 0.5f, 0.5f, 0.0f);
 
     
     float shininess = 0.02f;
-    vec3 norm = mix(getFaceNormal(vertexPosition), normalize(vertexNormal), 0.2f);
+    vec3 norm = mix(getFaceNormal(vertexPosition), normalize(vertexNormal), 0.1f);
 
     vec3 lightDir = normalize(-lightDirection.xyz);
 
