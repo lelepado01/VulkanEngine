@@ -5,7 +5,7 @@
 #include "terrain/IcosphereClipmap.h"
 
 #include "utils/StatusPrinter.h"
-
+ 
 int main() {
     Engine engine;
     
