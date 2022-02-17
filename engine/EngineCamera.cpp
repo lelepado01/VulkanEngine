@@ -89,35 +89,41 @@ std::vector<glm::vec4> EngineCamera::GetFrustumPlanes(){
 
 	glm::mat4 mvp = GetViewMatrix() * GetProjectionMatrix(); 
 
-	planes[0].x = mvp[3][0] + mvp[0][0];
-	planes[0].y = mvp[3][1] + mvp[0][1];
-	planes[0].z = mvp[3][2] + mvp[0][2];
-	planes[0].w = mvp[3][3] + mvp[0][3];
-	// Right clipping plane
-	planes[1].x = mvp[3][0] - mvp[0][0];
-	planes[1].y = mvp[3][1] - mvp[0][1];
-	planes[1].z = mvp[3][2] - mvp[0][2];
-	planes[1].w = mvp[3][3] - mvp[0][3];
-	// Top clipping plane
-	planes[2].x = mvp[3][0] - mvp[1][0];
-	planes[2].y = mvp[3][1] - mvp[1][1];
-	planes[2].z = mvp[3][2] - mvp[1][2];
-	planes[2].w = mvp[3][3] - mvp[1][3];
-	// Bottom clipping plane
-	planes[3].x = mvp[3][0] + mvp[1][0];
-	planes[3].y = mvp[3][1] + mvp[1][1];
-	planes[3].z = mvp[3][2] + mvp[1][2];
-	planes[3].w = mvp[3][3] + mvp[1][3];
-	// Near clipping plane
-	planes[4].x = mvp[3][0] + mvp[2][0];
-	planes[4].y = mvp[3][1] + mvp[2][1];
-	planes[4].z = mvp[3][2] + mvp[2][2];
-	planes[4].w = mvp[3][3] + mvp[2][3];
-	// Far clipping plane
-	planes[5].x = mvp[3][0] - mvp[2][0];
-	planes[5].y = mvp[3][1] - mvp[2][1];
-	planes[5].z = mvp[3][2] - mvp[2][2];
-	planes[5].w = mvp[3][3] - mvp[2][3];
+	// left
+    planes[0].x = mvp[0][3] + mvp[0][0];
+    planes[0].y = mvp[1][3] + mvp[1][0];
+    planes[0].z = mvp[2][3] + mvp[2][0];
+    planes[0].w = mvp[3][3] + mvp[3][0];
+    // right
+    planes[1].x = mvp[0][3] - mvp[0][0];
+    planes[1].y = mvp[1][3] - mvp[1][0];
+    planes[1].z = mvp[2][3] - mvp[2][0];
+    planes[1].w = mvp[3][3] - mvp[3][0];
+    // bottom
+    planes[2].x = mvp[0][3] + mvp[0][1];
+    planes[2].y = mvp[1][3] + mvp[1][1];
+    planes[2].z = mvp[2][3] + mvp[2][1];
+    planes[2].w = mvp[3][3] + mvp[3][1];
+    // top
+    planes[3].x = mvp[0][3] - mvp[0][1];
+    planes[3].y = mvp[1][3] - mvp[1][1];
+    planes[3].z = mvp[2][3] - mvp[2][1];
+    planes[3].w = mvp[3][3] - mvp[3][1];
+    // near
+    planes[4].x = mvp[0][2];
+    planes[4].y = mvp[1][2];
+    planes[4].z = mvp[2][2];
+    planes[4].w = mvp[3][2];
+    // far
+    planes[5].x = mvp[0][3] - mvp[0][2];
+    planes[5].y = mvp[1][3] - mvp[1][2];
+    planes[5].z = mvp[2][3] - mvp[2][2];
+    planes[5].w = mvp[3][3] - mvp[3][2];
 
+	for (int i = 0; i < 6; i++){
+		float mag = sqrt(planes[i].x * planes[i].x + planes[i].y * planes[i].y + planes[i].z * planes[i].z);
+		planes[i] = planes[i] / mag; 
+	}
+	
 	return planes; 
 }

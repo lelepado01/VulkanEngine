@@ -56,3 +56,10 @@ void IcospherePatch::subdivideTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, in
 void IcospherePatch::SetFrustrumCulled(bool v) {
     terrainPatchModel->IsCulled = v;    
 };
+
+unsigned int IcospherePatch::GetVertexNumber() { 
+	if (terrainPatchModel->IsCulled) {
+		return 0; 
+	}
+	return (unsigned int)vertices.size(); 
+};

@@ -109,9 +109,7 @@ void EngineModel::createIndexBuffer(const std::vector<uint32_t>& indices){
 }
 
 
-void EngineModel::Draw(VkCommandBuffer commandBuffer){
-//    if (IsCulled) return;
-    
+void EngineModel::Draw(VkCommandBuffer commandBuffer){    
     if (hasIndexBuffer){
         vkCmdDrawIndexed(commandBuffer, indexCount, 1, 0, 0, 0);
     } else {

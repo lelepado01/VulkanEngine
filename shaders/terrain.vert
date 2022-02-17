@@ -3,24 +3,26 @@
 layout (location = 0) in vec3 position;
 
 struct TerrainMaterial {
-    vec4 color;
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
+	float shininess; 
+    vec3 color;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
 };
 
 struct Light {
-    vec4 direction;
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
+    vec3 direction;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
 };
 
 layout (set = 0, binding = 0) uniform GlobalUniformBuffer {
     Light lightParams;
     TerrainMaterial terrainMaterialParams;
-	// vec4 frustumPlanes[6]; 
+	vec4 frustumPlanes[6]; 
 } ubo;
+
 
 layout (push_constant) uniform Push {
     mat4 PVMatrix;

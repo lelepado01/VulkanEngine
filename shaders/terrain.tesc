@@ -8,23 +8,24 @@ layout (push_constant) uniform Push {
 } push;
 
 struct TerrainMaterial {
-    vec4 color;
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
+	float shininess; 
+    vec3 color;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
 };
 
 struct Light {
-    vec4 direction;
-    vec4 ambient;
-    vec4 diffuse;
-    vec4 specular;
+    vec3 direction;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
 };
 
 layout (set = 0, binding = 0) uniform GlobalUniformBuffer {
     Light lightParams;
     TerrainMaterial terrainMaterialParams;
-	// vec4 frustumPlanes[6]; 
+	vec4 frustumPlanes[6]; 
 } ubo;
 
 
@@ -95,21 +96,21 @@ float getTessellationLevel(float dist){
 }
 
 
-// bool AABBBehindPlaneTest(vec3 center, vec3 extents, vec4 plane) {
-// 	vec3 n = abs(plane.xyz);
-// 	float r = dot(extents, n);
-// 	float s = dot(vec4(center, 1.0f), plane);
-// 	return (s + r) < 0.0f;
-// }
+float DistancePlaneToPoint(vec3 center, vec3 extents, vec4 plane) {
+	vec3 n = abs(plane.xyz);
+	float r = dot(extents, n);
+	float s = dot(vec4(center, 1.0f), plane);
+	return s + r;
+}
 
-// bool AABBOutsideFrustumTest(vec3 center, vec3 extents) {
-// 	for(int i = 0; i < 6; i++) {
-//     	if(AABBBehindPlaneTest(center, extents, ubo.frustumPlanes[i])) {
-//     		return true;
-//     	}
-//   	}
-//   	return false;
-// }
+bool AABBOutsideFrustumTest(vec3 center, float extent) {
+	for(int i = 0; i < 6; i++) {
+		if (DistancePlaneToPoint(center, vec3(extent, extent, extent), ubo.frustumPlanes[i]) < 0.0f){
+			return true;
+		}
+  	}
+  	return false;
+}
 
 
 void main(void) {
@@ -125,10 +126,11 @@ void main(void) {
         vec3 middlePoint3 = getMiddlePoint(position1, position2);
  
         vec3 middleOfTriangle = getMiddlePoint(middlePoint1, middlePoint2, middlePoint3); 
-		float triangleRadius = distance(middleOfTriangle, position1); 
-		vec3 triangleExtents = vec3(triangleRadius, triangleRadius, triangleRadius);
+		vec3 middleOfTriangleClipSpace = (push.PVMatrix * vec4(middleOfTriangle, 1.0f)).xyz; 
+		vec3 p1ClipSpace = (push.PVMatrix * vec4(position1, 1.0f)).xyz;  
+		float triangleRadiusClipSpace = distance(middleOfTriangleClipSpace, p1ClipSpace); 
 
-		// if (AABBOutsideFrustumTest(middleOfTriangle, triangleExtents)) {
+		// if (AABBOutsideFrustumTest(middleOfTriangleClipSpace, triangleRadiusClipSpace)) {
 		// 	gl_TessLevelInner[0] = 0.0f; 
 		// 	gl_TessLevelOuter[0] = 0.0f; 
 		// 	gl_TessLevelOuter[1] = 0.0f; 

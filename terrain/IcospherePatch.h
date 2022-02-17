@@ -28,7 +28,6 @@ private:
     
     unsigned int vertexIndex = 0;
     int maxSubdivisionLevel;
-    bool isCulled = false;
     
     std::shared_ptr<EngineModel> terrainPatchModel;
     
@@ -41,7 +40,7 @@ public:
     
     void SetFrustrumCulled(bool v);
     
-    unsigned int GetVertexNumber() { return (unsigned int)vertices.size(); };
+    unsigned int GetVertexNumber();
 };
 
 #endif /* IcospherePatch_hpp */

@@ -14,9 +14,14 @@ int main() {
 
     StatusPrinter statusPrinter; 
 
+	float rotationAngle = 0.01f;  
+
     while (engine.IsRunning()) {
         engine.Update();
         
+		EngineSettings::LightParams.direction = glm::rotate(EngineSettings::LightParams.direction, glm::radians(rotationAngle), glm::vec3(0,0,1)); 
+        EngineSettings::LightParams.direction = glm::rotate(EngineSettings::LightParams.direction, glm::radians(rotationAngle), glm::vec3(1,0,0)); 
+
         statusPrinter.Print(clipmap.GetVertexNumber(), EngineTime::FramesPerSecond()); 
         
         float frameTime = EngineTime::DeltaTime();

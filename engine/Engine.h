@@ -35,7 +35,7 @@
 struct GlobalUniformBuffer {
     Light light;
 	TerrainMaterial terrainMaterial;
-	// alignas(16) glm::vec4 frustumPlanes[6];
+	glm::vec4 frustumPlanes[6];
 };
 
 

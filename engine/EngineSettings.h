@@ -11,17 +11,18 @@
 #include <glm/glm.hpp>
 
 struct TerrainMaterial {
-    alignas(16) glm::vec4 ambient;
-    alignas(16) glm::vec4 diffuse;
-    alignas(16) glm::vec4 color;
-    alignas(16) glm::vec4 specular;
+	alignas(4) float shininess;  
+    alignas(16) glm::vec3 ambient;
+    alignas(16) glm::vec3 diffuse;
+    alignas(16) glm::vec3 color;
+    alignas(16) glm::vec3 specular;
 };
 
 struct Light {
-    glm::vec4 direction;
-    glm::vec4 ambient;
-    glm::vec4 diffuse;
-    glm::vec4 specular;
+    alignas(16) glm::vec3 direction;
+    alignas(16) glm::vec3 ambient;
+    alignas(16) glm::vec3 diffuse;
+    alignas(16) glm::vec3 specular;
 };
 
 class EngineSettings {
@@ -41,6 +42,7 @@ public:
     };
     
     inline static TerrainMaterial TerrainMaterialParams {
+		0.2f,
         glm::vec4(1.0f, 0.0f, 0.0f, 1.0f),
         glm::vec4(0.5f, 0.5f, 0.5f, 0.0f),
         glm::vec4(0.8, 0.8f, 0.8f, 0.0f),
