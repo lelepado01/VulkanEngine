@@ -57,14 +57,11 @@ public:
     const glm::vec3& GetPosition() const { return position; };
     const glm::vec3& GetDirection() const { return direction; };
 
-    void Update(float deltaTime);
-    
-//    void SetOrthographicProjection(float left, float right, float top, float bottom, float near, float far);
-//    void SetPerspectiveProjection(float fovy, float aspect, float near, float far);
-    
+    void Update(float deltaTime);        
     void SetViewDirection(glm::vec3 position, glm::vec3 direction, glm::vec3 up);
-//    void SetViewTarget(glm::vec3 position, glm::vec3 target, glm::vec3 up);
-//    void SetViewYXZ(glm::vec3 position, glm::vec3 rotation);
+
+	std::vector<glm::vec4> GetFrustumPlanes(); 
+
 };
 
 #endif /* EngineCamera_h */

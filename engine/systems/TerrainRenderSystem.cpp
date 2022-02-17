@@ -27,7 +27,6 @@ void TerrainRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLa
     
     std::vector<VkDescriptorSetLayout> descriptorSetLayouts{globalSetLayout};
     
-    
     VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
     pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
     pipelineLayoutInfo.setLayoutCount = static_cast<uint32_t>(descriptorSetLayouts.size());
@@ -67,8 +66,7 @@ void TerrainRenderSystem::RenderGameObjects(TerrainRenderFrameInfo& frameInfo){
                             pipelineLayout,
                             0, 1,
                             &frameInfo.globalDescriptorSet,
-                            0,
-                            nullptr);
+                            0, nullptr);
     
     for (auto& kv : frameInfo.gameObjects) {
         auto &obj = kv.second;

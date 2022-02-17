@@ -13,7 +13,7 @@ int main() {
     IcosphereClipmap clipmap{engine};
 
     StatusPrinter statusPrinter; 
-    
+
     while (engine.IsRunning()) {
         engine.Update();
         

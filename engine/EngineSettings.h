@@ -11,10 +11,10 @@
 #include <glm/glm.hpp>
 
 struct TerrainMaterial {
-    glm::vec4 color;
-    glm::vec4 ambient;
-    glm::vec4 diffuse;
-    glm::vec4 specular;
+    alignas(16) glm::vec4 ambient;
+    alignas(16) glm::vec4 diffuse;
+    alignas(16) glm::vec4 color;
+    alignas(16) glm::vec4 specular;
 };
 
 struct Light {

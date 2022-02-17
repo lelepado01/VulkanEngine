@@ -25,7 +25,7 @@ Engine::Engine(){
     }
     
     auto globalSetLayout = EngineDescriptorSetLayout::Builder(device)
-        .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
+        .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL)
         .build();
     
     for (int i = 0; i < globalDescriptorSets.size(); i++) {
@@ -35,8 +35,8 @@ Engine::Engine(){
             .build(globalDescriptorSets[i]);
     }
     
-    simpleRenderSystem = std::make_unique<SimpleRenderSystem>(device, renderer.GetSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout());
     terrainRenderSystem = std::make_unique<TerrainRenderSystem>(device, renderer.GetSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout());    
+    simpleRenderSystem = std::make_unique<SimpleRenderSystem>(device, renderer.GetSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout());
 }
 
 Engine::~Engine(){}
@@ -57,11 +57,16 @@ void Engine::Draw(EngineCamera& camera){
         GlobalUniformBuffer ubo{};
         ubo.terrainMaterial = EngineSettings::TerrainMaterialParams;
         ubo.light = EngineSettings::LightParams;
+		
+		// std::vector<glm::vec4> p = camera.GetFrustumPlanes(); 
+		// for (int i = 0; i < 6; i++){
+		// 	ubo.frustumPlanes[i] = p[i]; 
+		// }
 
         EngineSettings::LightParams.direction = glm::rotate(EngineSettings::LightParams.direction, glm::radians(angle), glm::vec3(0,0,1)); 
         EngineSettings::LightParams.direction = glm::rotate(EngineSettings::LightParams.direction, glm::radians(angle), glm::vec3(1,0,0)); 
         
-		globalUniformBuffers[frameIndex]->writeToIndex(&ubo, frameIndex);
+		globalUniformBuffers[frameIndex]->writeToBuffer(&ubo);
 		globalUniformBuffers[frameIndex]->flush();
         
         renderer.BeginSwapChainRenderPass(commandBuffer);

@@ -34,7 +34,8 @@
 
 struct GlobalUniformBuffer {
     Light light;
-    TerrainMaterial terrainMaterial;
+	TerrainMaterial terrainMaterial;
+	// alignas(16) glm::vec4 frustumPlanes[6];
 };
 
 
@@ -59,9 +60,7 @@ public:
     
     Engine( const Engine& ) = delete;
     Engine& operator=(const Engine& ) = delete;
-    
-//    void InitImGui(); 
-    
+        
     void Update(); 
     void Draw(EngineCamera& camera);
     void Quit();

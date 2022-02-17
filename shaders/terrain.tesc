@@ -7,6 +7,26 @@ layout (push_constant) uniform Push {
     vec3 cameraPosition;
 } push;
 
+struct TerrainMaterial {
+    vec4 color;
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+};
+
+struct Light {
+    vec4 direction;
+    vec4 ambient;
+    vec4 diffuse;
+    vec4 specular;
+};
+
+layout (set = 0, binding = 0) uniform GlobalUniformBuffer {
+    Light lightParams;
+    TerrainMaterial terrainMaterialParams;
+	// vec4 frustumPlanes[6]; 
+} ubo;
+
 
 vec3 getMiddlePoint(vec3 a, vec3 b){
     return (a + b) / 2;
@@ -75,9 +95,26 @@ float getTessellationLevel(float dist){
 }
 
 
+// bool AABBBehindPlaneTest(vec3 center, vec3 extents, vec4 plane) {
+// 	vec3 n = abs(plane.xyz);
+// 	float r = dot(extents, n);
+// 	float s = dot(vec4(center, 1.0f), plane);
+// 	return (s + r) < 0.0f;
+// }
+
+// bool AABBOutsideFrustumTest(vec3 center, vec3 extents) {
+// 	for(int i = 0; i < 6; i++) {
+//     	if(AABBBehindPlaneTest(center, extents, ubo.frustumPlanes[i])) {
+//     		return true;
+//     	}
+//   	}
+//   	return false;
+// }
+
+
 void main(void) {
     gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
- 
+
     if (gl_InvocationID == 0) {
         vec3 position1 = gl_in[gl_InvocationID].gl_Position.xyz;
         vec3 position2 = gl_in[gl_InvocationID+1].gl_Position.xyz;
@@ -87,11 +124,20 @@ void main(void) {
         vec3 middlePoint2 = getMiddlePoint(position3, position1);
         vec3 middlePoint3 = getMiddlePoint(position1, position2);
  
-        vec3 middleOfTriangle = getMiddlePoint(middlePoint1, middlePoint2, middlePoint3);
- 
-        gl_TessLevelInner[0] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middleOfTriangle));
-        gl_TessLevelOuter[0] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint1));
-        gl_TessLevelOuter[1] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint2));
-        gl_TessLevelOuter[2] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint3));
-    }
+        vec3 middleOfTriangle = getMiddlePoint(middlePoint1, middlePoint2, middlePoint3); 
+		float triangleRadius = distance(middleOfTriangle, position1); 
+		vec3 triangleExtents = vec3(triangleRadius, triangleRadius, triangleRadius);
+
+		// if (AABBOutsideFrustumTest(middleOfTriangle, triangleExtents)) {
+		// 	gl_TessLevelInner[0] = 0.0f; 
+		// 	gl_TessLevelOuter[0] = 0.0f; 
+		// 	gl_TessLevelOuter[1] = 0.0f; 
+		// 	gl_TessLevelOuter[2] = 0.0f; 
+		// }  else {
+			gl_TessLevelInner[0] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middleOfTriangle));
+			gl_TessLevelOuter[0] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint1));
+			gl_TessLevelOuter[1] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint2));
+			gl_TessLevelOuter[2] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint3));
+		// }
+	}
 }

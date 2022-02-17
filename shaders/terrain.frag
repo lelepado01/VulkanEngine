@@ -24,6 +24,7 @@ struct Light {
 layout (set = 0, binding = 0) uniform GlobalUniformBuffer {
     Light lightParams;
     TerrainMaterial terrainMaterialParams;
+	// vec4 frustumPlanes[6]; 
 } ubo;
 
 layout (push_constant) uniform Push {
