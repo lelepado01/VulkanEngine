@@ -48,6 +48,7 @@ void Engine::Update(){
     EngineTime::Update();
 }
 
+float angle = 0.1f;  
 void Engine::Draw(EngineCamera& camera){
     
     if (auto commandBuffer = renderer.BeginFrame()){
@@ -56,9 +57,12 @@ void Engine::Draw(EngineCamera& camera){
         GlobalUniformBuffer ubo{};
         ubo.terrainMaterial = EngineSettings::TerrainMaterialParams;
         ubo.light = EngineSettings::LightParams;
+
+        EngineSettings::LightParams.direction = glm::rotate(EngineSettings::LightParams.direction, glm::radians(angle), glm::vec3(0,0,1)); 
+        EngineSettings::LightParams.direction = glm::rotate(EngineSettings::LightParams.direction, glm::radians(angle), glm::vec3(1,0,0)); 
         
-        globalUniformBuffers[frameIndex]->writeToIndex(&ubo, frameIndex);
-        globalUniformBuffers[frameIndex]->flush();
+		globalUniformBuffers[frameIndex]->writeToIndex(&ubo, frameIndex);
+		globalUniformBuffers[frameIndex]->flush();
         
         renderer.BeginSwapChainRenderPass(commandBuffer);
         

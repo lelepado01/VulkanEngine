@@ -131,7 +131,7 @@ void main() {
     gl_Position = interpolate(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_in[2].gl_Position);
 
     float noiseMultiplier = noiseHeight(gl_Position.xyz);
-    vertexNormal = noiseNormal(gl_Position.xyz);
+    vertexNormal = gl_Position.xyz * noiseNormal(gl_Position.xyz);
     gl_Position = gl_Position + min(noiseMultiplier * 0.004f, -0.00009);
     
     vertexPosition = gl_Position.xyz;
