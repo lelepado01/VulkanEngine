@@ -22,7 +22,7 @@ vec4 interpolate(vec4 a, vec4 b, vec4 c){
 void main() {
     gl_Position = interpolate(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_in[2].gl_Position);
 
-    vertexNormal = vertexNormalIn[0];
+    vertexNormal = (vertexNormalIn[0] + vertexNormalIn[1] + vertexNormalIn[2]) / 3.0f;
     vertexPosition = gl_Position.xyz;
     vertexHeight = distance(gl_Position.xyz, vec3(0,0,0));
     

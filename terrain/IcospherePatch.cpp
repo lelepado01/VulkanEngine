@@ -12,9 +12,10 @@ IcospherePatch::IcospherePatch(Engine& engine, glm::vec3 a, glm::vec3 b, glm::ve
     maxSubdivisionLevel = maxSubs;
     center = (a + b + c) * EngineSettings::SphereRadius / 3.0f;
     faceNormal = glm::normalize(center);
+	
     subdivideTriangle(a, b, c, 0);
-
 	addNoiseToPatch(); 
+	recalculateNormals(); 
 
     terrainPatchModel = engine.LoadModelFromVertices(vertices, indices);
     EngineGameObject gameObject = EngineGameObject::createGameObject();
@@ -47,8 +48,30 @@ void IcospherePatch::addNoiseToPatch(){
 	for (int i = 0; i < vertices.size(); i++) {
 		vertices[i].position = vertices[i].position + 6.0f* glm::vec3(noise.noise(0.1f *vertices[i].position.x,0.1f * vertices[i].position.y, 0.1f *vertices[i].position.z)); 
 	}
-	
+}
 
+glm::vec3 IcospherePatch::computeVertexNormal(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c) {
+    return glm::cross(b-a, c-a);
+}
+
+void IcospherePatch::recalculateNormals(){
+	for (int normalTriangleIndex = 0; normalTriangleIndex < indices.size(); normalTriangleIndex+=3) {
+        int vertexIndexA = indices.at(normalTriangleIndex);
+        int vertexIndexB = indices.at(normalTriangleIndex + 1);
+        int vertexIndexC = indices.at(normalTriangleIndex + 2);
+
+        glm::vec3 normal = computeVertexNormal(vertices.at(vertexIndexA).position,
+                                               vertices.at(vertexIndexB).position,
+                                               vertices.at(vertexIndexC).position);
+        
+        vertices[vertexIndexA].normal += normal;
+        vertices[vertexIndexB].normal += normal;
+        vertices[vertexIndexC].normal += normal;
+    }
+    
+    for (int i = 0; i < vertices.size(); i++) {
+        vertices[i].normal = glm::normalize(vertices[i].normal);
+    }
 }
 
 void IcospherePatch::subdivideTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, int subdivisionLevel){

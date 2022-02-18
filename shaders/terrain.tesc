@@ -2,6 +2,10 @@
 
 layout(vertices = 3) out;
 
+layout (location = 0) in vec3 vertexNormalIn[]; 
+layout (location = 0) out vec3 vertexNormalOut[]; 
+
+
 layout (push_constant) uniform Push {
     mat4 PVMatrix;  
     vec3 cameraPosition;
@@ -115,6 +119,7 @@ bool AABBOutsideFrustumTest(vec3 center, float extent) {
 
 void main(void) {
     gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
+	vertexNormalOut[gl_InvocationID] = vertexNormalIn[gl_InvocationID];
 
     if (gl_InvocationID == 0) {
         vec3 position1 = gl_in[gl_InvocationID].gl_Position.xyz;

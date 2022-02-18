@@ -36,6 +36,8 @@ private:
     void subdivideTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, int subdivisionLevel);
     void addVertexAndIndex(glm::vec3 v); 
     void addNoiseToPatch(); 
+	void recalculateNormals(); 
+	glm::vec3 computeVertexNormal(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c);
 
 public:
     IcospherePatch(Engine& engine, glm::vec3 a, glm::vec3 b, glm::vec3 c, int maxsubs);
