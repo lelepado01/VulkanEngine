@@ -15,6 +15,7 @@
 #include "../engine/Engine.h"
 #include "../engine/EngineGameObject.h"
 #include "../engine/EngineSettings.h"
+#include "noise/SimplexNoise.h"
 
 class IcospherePatch {
 public:
@@ -34,7 +35,8 @@ private:
 private:
     void subdivideTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, int subdivisionLevel);
     void addVertexAndIndex(glm::vec3 v); 
-    
+    void addNoiseToPatch(); 
+
 public:
     IcospherePatch(Engine& engine, glm::vec3 a, glm::vec3 b, glm::vec3 c, int maxsubs);
     

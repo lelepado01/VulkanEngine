@@ -14,6 +14,8 @@ IcospherePatch::IcospherePatch(Engine& engine, glm::vec3 a, glm::vec3 b, glm::ve
     faceNormal = glm::normalize(center);
     subdivideTriangle(a, b, c, 0);
 
+	addNoiseToPatch(); 
+
     terrainPatchModel = engine.LoadModelFromVertices(vertices, indices);
     EngineGameObject gameObject = EngineGameObject::createGameObject();
     gameObject.model = terrainPatchModel;
@@ -28,11 +30,25 @@ void IcospherePatch::addVertexAndIndex(glm::vec3 v){
         float len = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
         v = v * EngineSettings::SphereRadius / len;
         
-        vertices.push_back(TerrainVertex{v});
+        vertices.push_back(TerrainVertex{v, glm::vec3()});
         indexVertexPair.emplace(v, vertexIndex);
         vertexIndex++;
     }
     indices.push_back(indexVertexPair[v]);
+}
+
+
+void IcospherePatch::addNoiseToPatch(){
+	float scale = 405.1f;
+    float lacunarity = 1.5f;
+    float persistance = 0.55f;
+	const SimplexNoise noise(scale, 0.5f, lacunarity, persistance);
+
+	for (int i = 0; i < vertices.size(); i++) {
+		vertices[i].position = vertices[i].position + 6.0f* glm::vec3(noise.noise(0.1f *vertices[i].position.x,0.1f * vertices[i].position.y, 0.1f *vertices[i].position.z)); 
+	}
+	
+
 }
 
 void IcospherePatch::subdivideTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, int subdivisionLevel){
