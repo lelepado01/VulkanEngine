@@ -4,8 +4,6 @@ SHADER_CXX = glslc
 CFLAGS = -std=c++17 -O2
 LDFLAGS = -lglfw -lvulkan -ldl -lpthread
 
-H_FILES = $(shell find . -type f -name "*.h")
-
 SRC_FILES = $(subst ./main.cpp,,$(shell find . -type f -name "*.cpp"))
 OBJ_FILES = $(subst .cpp,.o,$(SRC_FILES))
 
@@ -14,8 +12,8 @@ OBJ_SHADER = $(addsuffix .spv,$(SRC_SHADER))
 
 NAME = VulkanEngine
 
-%.o: %.cpp
-	$(CXX) $(CFLAGS) -o $@ -c $^
+%.o: %.cpp %.h
+	$(CXX) $(CFLAGS) -o $@ -c $<
 
 %.vert.spv: %.vert
 	$(SHADER_CXX) $^ -o $@ 
@@ -29,7 +27,7 @@ NAME = VulkanEngine
 %.tesc.spv: %.tesc
 	$(SHADER_CXX) $^ -o $@ 
 
-$(NAME): main.cpp $(OBJ_FILES) $(OBJ_SHADER) $(H_FILES)
+$(NAME): main.cpp $(OBJ_FILES) $(OBJ_SHADER)
 	$(CXX) -o $(NAME) $(CFLAGS) $(OBJ_FILES) main.cpp $(LDFLAGS)
 
 .PHONY: run clean

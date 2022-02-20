@@ -141,10 +141,10 @@ void main(void) {
 		// 	gl_TessLevelOuter[1] = 0.0f; 
 		// 	gl_TessLevelOuter[2] = 0.0f; 
 		// }  else {
-			gl_TessLevelInner[0] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middleOfTriangle));
-			gl_TessLevelOuter[0] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint1));
-			gl_TessLevelOuter[1] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint2));
-			gl_TessLevelOuter[2] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint3));
+			gl_TessLevelInner[0] = 1.0f; //getTessellationLevel(lengthSquared3D(push.cameraPosition, middleOfTriangle));
+			gl_TessLevelOuter[0] = 1.0f; //getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint1));
+			gl_TessLevelOuter[1] = 1.0f; //getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint2));
+			gl_TessLevelOuter[2] = 1.0f; //getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint3));
 		// }
 	}
 }

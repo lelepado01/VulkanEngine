@@ -22,7 +22,7 @@ int main() {
 		EngineSettings::LightParams.direction = glm::rotate(EngineSettings::LightParams.direction, glm::radians(rotationAngle), glm::vec3(0,0,1)); 
         EngineSettings::LightParams.direction = glm::rotate(EngineSettings::LightParams.direction, glm::radians(rotationAngle), glm::vec3(1,0,0)); 
 
-        statusPrinter.Print(clipmap.GetVertexNumber(), EngineTime::FramesPerSecond()); 
+        statusPrinter.Print(clipmap.GetVertexNumber(), clipmap.GetCulledFacesNumber(), EngineTime::FramesPerSecond()); 
         
         float frameTime = EngineTime::DeltaTime();
         camera.Update(frameTime);

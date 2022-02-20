@@ -19,12 +19,16 @@ private:
     
     std::vector<IcospherePatch> terrainPatches;
     
+private:
+	void addIcosphereSubPatch(Engine& engine, glm::vec3 p1, glm::vec3 p2, glm::vec3 p3); 
+
 public:
     IcosphereClipmap(Engine& engine);
     
     void Update(const EngineCamera& camera);
     
     unsigned int GetVertexNumber();
+    unsigned int GetCulledFacesNumber();
 
 };
 

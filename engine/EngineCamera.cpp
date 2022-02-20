@@ -84,10 +84,14 @@ void EngineCamera::recalculateCameraDirection(){
     front = glm::normalize(direction);
 }
 
-std::vector<glm::vec4> EngineCamera::GetFrustumPlanes(){
+std::vector<glm::vec4> EngineCamera::GetFrustumPlanes() const {
 	std::vector<glm::vec4> planes = std::vector<glm::vec4>(6);
 
-	glm::mat4 mvp = GetViewMatrix() * GetProjectionMatrix(); 
+	glm::vec3 camera = GetPosition();
+    glm::vec3 target = camera + GetDirection(); // add camera position plus target direction to get target location for view matrix function
+    glm::mat4 view = glm::lookAt(camera, target, up);
+    glm::mat4 proj = GetProjectionMatrix();
+	glm::mat4 mvp = proj * view; 
 
 	// left
     planes[0].x = mvp[0][3] + mvp[0][0];

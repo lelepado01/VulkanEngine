@@ -60,7 +60,7 @@ public:
     void Update(float deltaTime);        
     void SetViewDirection(glm::vec3 position, glm::vec3 direction, glm::vec3 up);
 
-	std::vector<glm::vec4> GetFrustumPlanes(); 
+	std::vector<glm::vec4> GetFrustumPlanes() const; 
 
 };
 
