@@ -80,47 +80,62 @@ void EngineCamera::recalculateCameraDirection(){
 std::vector<glm::vec4> EngineCamera::GetFrustumPlanes() const {
 	std::vector<glm::vec4> planes = std::vector<glm::vec4>(6);
 
-	glm::vec3 camera = GetPosition();
-    glm::vec3 target = camera + GetDirection(); // add camera position plus target direction to get target location for view matrix function
-    glm::mat4 view = glm::lookAt(camera, target, up);
-    glm::mat4 proj = GetProjectionMatrix();
-	glm::mat4 mvp = proj * view; 
+    glm::mat4 v = GetViewMatrix();
+    glm::mat4 p = GetProjectionMatrix();
+	// glm::mat4 mvp = proj * view; 
 
-	// left
-    planes[0].x = mvp[0][3] + mvp[0][0];
-    planes[0].y = mvp[1][3] + mvp[1][0];
-    planes[0].z = mvp[2][3] + mvp[2][0];
-    planes[0].w = mvp[3][3] + mvp[3][0];
-    // right
-    planes[1].x = mvp[0][3] - mvp[0][0];
-    planes[1].y = mvp[1][3] - mvp[1][0];
-    planes[1].z = mvp[2][3] - mvp[2][0];
-    planes[1].w = mvp[3][3] - mvp[3][0];
-    // bottom
-    planes[2].x = mvp[0][3] + mvp[0][1];
-    planes[2].y = mvp[1][3] + mvp[1][1];
-    planes[2].z = mvp[2][3] + mvp[2][1];
-    planes[2].w = mvp[3][3] + mvp[3][1];
-    // top
-    planes[3].x = mvp[0][3] - mvp[0][1];
-    planes[3].y = mvp[1][3] - mvp[1][1];
-    planes[3].z = mvp[2][3] - mvp[2][1];
-    planes[3].w = mvp[3][3] - mvp[3][1];
-    // near
-    planes[4].x = mvp[0][2];
-    planes[4].y = mvp[1][2];
-    planes[4].z = mvp[2][2];
-    planes[4].w = mvp[3][2];
-    // far
-    planes[5].x = mvp[0][3] - mvp[0][2];
-    planes[5].y = mvp[1][3] - mvp[1][2];
-    planes[5].z = mvp[2][3] - mvp[2][2];
-    planes[5].w = mvp[3][3] - mvp[3][2];
+	glm::mat4 clipMatrix;
+ 
+    clipMatrix[0][0] = v[0][0]*p[0][0]+v[0][1]*p[1][0]+v[0][2]*p[2][0]+v[0][3]*p[3][0];
+    clipMatrix[1][0] = v[0][0]*p[0][1]+v[0][1]*p[1][1]+v[0][2]*p[2][1]+v[0][3]*p[3][1];
+    clipMatrix[2][0] = v[0][0]*p[0][2]+v[0][1]*p[1][2]+v[0][2]*p[2][2]+v[0][3]*p[3][2];
+    clipMatrix[3][0] = v[0][0]*p[0][3]+v[0][1]*p[1][3]+v[0][2]*p[2][3]+v[0][3]*p[3][3];
+    clipMatrix[0][1] = v[1][0]*p[0][0]+v[1][1]*p[1][0]+v[1][2]*p[2][0]+v[1][3]*p[3][0];
+    clipMatrix[1][1] = v[1][0]*p[0][1]+v[1][1]*p[1][1]+v[1][2]*p[2][1]+v[1][3]*p[3][1];
+    clipMatrix[2][1] = v[1][0]*p[0][2]+v[1][1]*p[1][2]+v[1][2]*p[2][2]+v[1][3]*p[3][2];
+    clipMatrix[3][1] = v[1][0]*p[0][3]+v[1][1]*p[1][3]+v[1][2]*p[2][3]+v[1][3]*p[3][3];
+    clipMatrix[0][2] = v[2][0]*p[0][0]+v[2][1]*p[1][0]+v[2][2]*p[2][0]+v[2][3]*p[3][0];
+    clipMatrix[1][2] = v[2][0]*p[0][1]+v[2][1]*p[1][1]+v[2][2]*p[2][1]+v[2][3]*p[3][1];
+    clipMatrix[2][2] = v[2][0]*p[0][2]+v[2][1]*p[1][2]+v[2][2]*p[2][2]+v[2][3]*p[3][2];
+    clipMatrix[3][2] = v[2][0]*p[0][3]+v[2][1]*p[1][3]+v[2][2]*p[2][3]+v[2][3]*p[3][3];
+    clipMatrix[0][3] = v[3][0]*p[0][0]+v[3][1]*p[1][0]+v[3][2]*p[2][0]+v[3][3]*p[3][0];
+    clipMatrix[1][3] = v[3][0]*p[0][1]+v[3][1]*p[1][1]+v[3][2]*p[2][1]+v[3][3]*p[3][1];
+    clipMatrix[2][3] = v[3][0]*p[0][2]+v[3][1]*p[1][2]+v[3][2]*p[2][2]+v[3][3]*p[3][2];
+    clipMatrix[3][3] = v[3][0]*p[0][3]+v[3][1]*p[1][3]+v[3][2]*p[2][3]+v[3][3]*p[3][3];
+ 
+    planes[0].x = clipMatrix[3][0]-clipMatrix[0][0];
+    planes[0].y = clipMatrix[3][1]-clipMatrix[0][1];
+    planes[0].z = clipMatrix[3][2]-clipMatrix[0][2];
+    planes[0].w = clipMatrix[3][3]-clipMatrix[0][3];
+ 
+    planes[1].x = clipMatrix[3][0]+clipMatrix[0][0];
+    planes[1].y = clipMatrix[3][1]+clipMatrix[0][1];
+    planes[1].z = clipMatrix[3][2]+clipMatrix[0][2];
+    planes[1].w = clipMatrix[3][3]+clipMatrix[0][3];
+ 
+    planes[2].x = clipMatrix[3][0]+clipMatrix[1][0];
+    planes[2].y = clipMatrix[3][1]+clipMatrix[1][1];
+    planes[2].z = clipMatrix[3][2]+clipMatrix[1][2];
+    planes[2].w = clipMatrix[3][3]+clipMatrix[1][3];
+ 
+    planes[3].x = clipMatrix[3][0]-clipMatrix[1][0];
+    planes[3].y = clipMatrix[3][1]-clipMatrix[1][1];
+    planes[3].z = clipMatrix[3][2]-clipMatrix[1][2];
+    planes[3].w = clipMatrix[3][3]-clipMatrix[1][3];
+ 
+    planes[4].x = clipMatrix[3][0]-clipMatrix[2][0];
+    planes[4].y = clipMatrix[3][1]-clipMatrix[2][1];
+    planes[4].z = clipMatrix[3][2]-clipMatrix[2][2];
+    planes[4].w = clipMatrix[3][3]-clipMatrix[2][3];
+ 
+    planes[5].x = clipMatrix[3][0]+clipMatrix[2][0];
+    planes[5].y = clipMatrix[3][1]+clipMatrix[2][1];
+    planes[5].z = clipMatrix[3][2]+clipMatrix[2][2];
+    planes[5].w = clipMatrix[3][3]+clipMatrix[2][3];
 
-	for (int i = 0; i < 6; i++){
-		float mag = sqrt(planes[i].x * planes[i].x + planes[i].y * planes[i].y + planes[i].z * planes[i].z);
-		planes[i] = planes[i] / mag; 
-	}
+	for( int i = 0; i < 6; i++ ){
+        planes[i] = glm::normalize( planes[i] );
+    }
 	
 	return planes; 
 }

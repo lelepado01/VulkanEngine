@@ -58,8 +58,8 @@ void IcospherePatch::addNoiseToPatch(){
 	const SimplexNoise noise2(500.0f, 0.5f, 0.1f, 0.9f);
 
 	for (int i = 0; i < vertices.size(); i++) {
-		float noiseHeight = 6.0f * noise1.noise(0.1f *vertices[i].position.x,0.1f * vertices[i].position.y, 0.1f *vertices[i].position.z);
-		noiseHeight += 2.0f*noise2.noise(vertices[i].position.x, vertices[i].position.y, vertices[i].position.z);
+		float noiseHeight = 5.0f * noise1.noise(0.1f *vertices[i].position.x,0.1f * vertices[i].position.y, 0.1f *vertices[i].position.z);
+		noiseHeight += 0.6f*noise2.noise(0.7f *vertices[i].position.x, 0.7f *vertices[i].position.y, 0.7f *vertices[i].position.z);
 		vertices[i].position = vertices[i].position + glm::vec3(noiseHeight); 
 	}
 }
@@ -134,23 +134,19 @@ bool AABBOutsideFrustumTest(glm::vec3 left, glm::vec3 right, glm::vec4 planes[6]
   	return false;
 }
 
-
 void IcospherePatch::Update(const EngineCamera& camera){
 	float orientedAngle = glm::orientedAngle(glm::normalize(camera.GetPosition()), 
 											faceNormal,
                            					glm::normalize(glm::cross(camera.GetPosition(), faceNormal))); 
 	
 	std::vector<glm::vec4> p = camera.GetFrustumPlanes(); 
-	glm::vec3 boxCenter = 0.5f * (minVertex + maxVertex);
-    glm::vec3 boxExtents = 0.5f * (maxVertex - minVertex);
 
-	glm::mat4 mvp = camera.GetViewMatrix()*camera.GetProjectionMatrix();
-	glm::vec4 v4bCenter = mvp * glm::vec4(boxCenter.x, boxCenter.y, boxCenter.z, 1.0f);
-	glm::vec4 v4bExtents = mvp * glm::vec4(boxExtents.x, boxExtents.y, boxExtents.z, 1.0f);
-	boxCenter = glm::vec3(v4bCenter.x, v4bCenter.y, v4bCenter.z); 
-	boxExtents = glm::vec3(v4bExtents.x, v4bExtents.y, v4bExtents.z); 
-	bool outOfFrustrum = AABBOutsideFrustumTest(boxCenter, boxExtents, p.data()); 
-	frustrumCulled = outOfFrustrum; 
-
-	SetFrustrumCulled(orientedAngle > glm::radians(90.0f));// || outOfFrustrum);
+	glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
+	glm::vec4 v4Min = mvp * glm::vec4(minVertex.x, minVertex.y, minVertex.z, 0.0f);
+	glm::vec4 v4Max = mvp * glm::vec4(maxVertex.x, maxVertex.y, maxVertex.z, 0.0f);
+	glm::vec3 v3Min = glm::vec3(v4Min.x, v4Min.y, v4Min.z);
+	glm::vec3 v3Max = glm::vec3(v4Max.x, v4Max.y, v4Max.z);
+	bool outOfFrustrum = AABBOutsideFrustumTest(v3Min, v3Max, p.data()); 
+	// frustrumCulled = outOfFrustrum; 
+	SetFrustrumCulled(orientedAngle > glm::radians(90.0f));
 }

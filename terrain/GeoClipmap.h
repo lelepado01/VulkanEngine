@@ -11,11 +11,13 @@
 #include <stdio.h>
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 #include "../engine/Engine.h"
 #include "../engine/EngineModel.h"
 #include "../engine/EngineCamera.h"
 #include "../engine/EngineVertex.h"
+#include "noise/SimplexNoise.h"
 
 class GeoClipmap {
 private:

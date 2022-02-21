@@ -47,6 +47,14 @@ void GeoClipmap::init(){
             }
         }
     }
+
+	for (int x = -4; x < 5; x++) {
+        for (int y = -4; y < 5; y++) {
+            if (x == -4 || y == -4 || x == 4 || y == 4) {
+                createBlock(x * blockSize - centerOffset, y*blockSize - centerOffset, 16);
+            }
+        }
+    }
 }
 
 void GeoClipmap::createBlock(int xStart, int yStart, int lod){
@@ -59,7 +67,7 @@ void GeoClipmap::createBlock(int xStart, int yStart, int lod){
         for (int y = 0; y <= verticesPerSide; y++) {
             int xPos = xStart + x*distanceBetweenVertices;
             int yPos = yStart + y*distanceBetweenVertices;
-            vertices.push_back({{xPos, 0, yPos}, {0,0,0}});
+            vertices.push_back({{xPos, 0, yPos}, {0,0,0}, lod});
         }
     }
     
