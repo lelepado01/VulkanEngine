@@ -12,6 +12,7 @@
 #include <vector>
 #include <memory>
 
+#include "../engine/Engine.h"
 #include "../engine/EngineModel.h"
 #include "../engine/EngineCamera.h"
 #include "../engine/EngineVertex.h"
@@ -22,13 +23,15 @@ private:
     std::vector<unsigned int> indices{};
     
     int blockSize = 64;
+
+	std::shared_ptr<EngineModel> terrainPatchModel;
     
 private:
     void init();
     void createBlock(int xStart, int yStart, int lod);
     
 public:
-    GeoClipmap();
+    GeoClipmap(Engine& engine);
     
     void Update(const EngineCamera& camera);
     

@@ -7,8 +7,15 @@
 
 #include "GeoClipmap.h"
 
-GeoClipmap::GeoClipmap(){
+GeoClipmap::GeoClipmap(Engine& engine){
     init();
+
+	terrainPatchModel = engine.LoadModelFromVertices(vertices, indices);
+    EngineGameObject gameObject = EngineGameObject::createGameObject();
+    gameObject.model = terrainPatchModel;
+    gameObject.tag = GameObjectTag::TERRAIN;
+    
+    engine.AddGameObject(gameObject);
 }
 
 void GeoClipmap::init(){
@@ -52,7 +59,7 @@ void GeoClipmap::createBlock(int xStart, int yStart, int lod){
         for (int y = 0; y <= verticesPerSide; y++) {
             int xPos = xStart + x*distanceBetweenVertices;
             int yPos = yStart + y*distanceBetweenVertices;
-            vertices.push_back({{xPos, 0, yPos}});
+            vertices.push_back({{xPos, 0, yPos}, {0,0,0}});
         }
     }
     

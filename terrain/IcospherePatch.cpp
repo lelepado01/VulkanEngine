@@ -121,7 +121,7 @@ float DistancePlaneToPoint(glm::vec3 center, glm::vec3 extents, glm::vec4 plane)
 	glm::vec3 n = glm::abs(glm::vec3(plane.x, plane.y, plane.z));
 	float r = glm::dot(extents, n);
 	float s = glm::dot(glm::vec4(center, 1.0f), plane);
-	std::cout << s+r << "\n"; 
+	// std::cout << s+r << "\n"; 
 	return s + r;
 }
 
@@ -152,5 +152,5 @@ void IcospherePatch::Update(const EngineCamera& camera){
 	bool outOfFrustrum = AABBOutsideFrustumTest(boxCenter, boxExtents, p.data()); 
 	frustrumCulled = outOfFrustrum; 
 
-	SetFrustrumCulled(orientedAngle > glm::radians(45.0f) || outOfFrustrum);
+	SetFrustrumCulled(orientedAngle > glm::radians(90.0f));// || outOfFrustrum);
 }

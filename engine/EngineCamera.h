@@ -32,11 +32,8 @@ private:
     float yaw;
     float aspectRatio;
     
-    const float minFOV = 35.0f;
-    const float maxFOV = 65.0f;
     const float maxDistance = EngineSettings::SphereRadius * 2;
 
-    
     glm::mat4 projectionMatrix;
     glm::mat4 viewMatrix;
     
@@ -44,13 +41,12 @@ public:
     
 private:
     void recalculateCameraView();
-    void recalculateCameraProjection();
     void recalculateCameraDirection();
     void updatePosition(float deltaTime);
     void updateDirection();
 
 public:
-    EngineCamera(float aspectRatio);
+    EngineCamera(glm::vec3 initialPosition, float aspectRatio);
     
     const glm::mat4& GetProjectionMatrix() const { return projectionMatrix; };
     const glm::mat4& GetViewMatrix() const { return viewMatrix; };
