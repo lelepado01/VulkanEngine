@@ -57,7 +57,7 @@ float percentageToLOD(float perc, float minLOD, float maxLOD){
 float getTessellationLevel(float dist){
           
     if (dist < 100.0f*100.0f){
-        return 18.0f;
+        return 16.0f;
     }
     
     float transitionRange = 105.0f *105.0f;
@@ -99,24 +99,6 @@ float getTessellationLevel(float dist){
     return 1.0;
 }
 
-
-float DistancePlaneToPoint(vec3 center, vec3 extents, vec4 plane) {
-	vec3 n = abs(plane.xyz);
-	float r = dot(extents, n);
-	float s = dot(vec4(center, 1.0f), plane);
-	return s + r;
-}
-
-bool AABBOutsideFrustumTest(vec3 center, float extent) {
-	for(int i = 0; i < 6; i++) {
-		if (DistancePlaneToPoint(center, vec3(extent, extent, extent), ubo.frustumPlanes[i]) < 0.0f){
-			return true;
-		}
-  	}
-  	return false;
-}
-
-
 void main(void) {
     gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
 	vertexNormalOut[gl_InvocationID] = vertexNormalIn[gl_InvocationID];
@@ -135,16 +117,16 @@ void main(void) {
 		vec3 p1ClipSpace = (push.PVMatrix * vec4(position1, 1.0f)).xyz;  
 		float triangleRadiusClipSpace = distance(middleOfTriangleClipSpace, p1ClipSpace); 
 
-		// if (AABBOutsideFrustumTest(middleOfTriangleClipSpace, triangleRadiusClipSpace)) {
+		// if (!TriangleInsideFrustum(position1, position2, position3)) {
 		// 	gl_TessLevelInner[0] = 0.0f; 
 		// 	gl_TessLevelOuter[0] = 0.0f; 
 		// 	gl_TessLevelOuter[1] = 0.0f; 
 		// 	gl_TessLevelOuter[2] = 0.0f; 
 		// }  else {
-			gl_TessLevelInner[0] = 1.0f; //getTessellationLevel(lengthSquared3D(push.cameraPosition, middleOfTriangle));
-			gl_TessLevelOuter[0] = 1.0f; //getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint1));
-			gl_TessLevelOuter[1] = 1.0f; //getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint2));
-			gl_TessLevelOuter[2] = 1.0f; //getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint3));
+			gl_TessLevelInner[0] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middleOfTriangle));
+			gl_TessLevelOuter[0] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint1));
+			gl_TessLevelOuter[1] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint2));
+			gl_TessLevelOuter[2] = getTessellationLevel(lengthSquared3D(push.cameraPosition, middlePoint3));
 		// }
 	}
 }

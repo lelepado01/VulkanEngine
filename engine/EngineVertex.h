@@ -42,10 +42,9 @@ struct Vertex{
 struct TerrainVertex{
     glm::vec3 position{};
     glm::vec3 normal{};
-	int lod; 
     
     bool operator==(const TerrainVertex& other) const {
-        return position == other.position && normal == other.normal && lod == other.lod;
+        return position == other.position && normal == other.normal;
     }
     
     static std::vector<VkVertexInputBindingDescription> getBindingDescriptions(){
@@ -61,7 +60,6 @@ struct TerrainVertex{
         
         attributeDescriptions.push_back({0,0,VK_FORMAT_R32G32B32_SFLOAT, offsetof(TerrainVertex, position)});
         attributeDescriptions.push_back({1,0,VK_FORMAT_R32G32B32_SFLOAT, offsetof(TerrainVertex, normal)});
-        attributeDescriptions.push_back({2,0,VK_FORMAT_R8_SINT, offsetof(TerrainVertex, lod)});
 
         return attributeDescriptions;
     }
@@ -81,7 +79,7 @@ template <>
 struct hash<TerrainVertex> {
   size_t operator()(TerrainVertex const &vertex) const {
     size_t seed = 0;
-      hashCombine(seed, vertex.position, vertex.normal, vertex.lod);
+      hashCombine(seed, vertex.position, vertex.normal);
     return seed;
   }
 };

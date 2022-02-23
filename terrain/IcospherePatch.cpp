@@ -10,12 +10,15 @@
 
 IcospherePatch::IcospherePatch(Engine& engine, glm::vec3 a, glm::vec3 b, glm::vec3 c, int maxSubs) {
     maxSubdivisionLevel = maxSubs;
-    center = (a + b + c) * EngineSettings::SphereRadius / 3.0f;
+    glm::vec3 center = (a + b + c) * EngineSettings::SphereRadius / 3.0f;
     faceNormal = glm::normalize(center);
 
     subdivideTriangle(a, b, c, 0);
 	addNoiseToPatch(); 
 	recalculateNormals(); 
+
+	minVertex = (minVertex*3.0f + center) / 4.0f; 
+	maxVertex = (maxVertex*3.0f + center) / 4.0f;
 
     terrainPatchModel = engine.LoadModelFromVertices(vertices, indices);
     EngineGameObject gameObject = EngineGameObject::createGameObject();
@@ -42,25 +45,28 @@ void IcospherePatch::addVertexAndIndex(glm::vec3 v){
 
 void IcospherePatch::updateMinMax(glm::vec3 v){
 	minVertex.x = fmin(v.x, minVertex.x);
-	minVertex.y = fmin(v.x, minVertex.y);
-	minVertex.z = fmin(v.x, minVertex.z);
+	minVertex.y = fmin(v.y, minVertex.y);
+	minVertex.z = fmin(v.z, minVertex.z);
 
 	maxVertex.x = fmax(v.x, maxVertex.x);
-	maxVertex.y = fmax(v.x, maxVertex.y);
-	maxVertex.z = fmax(v.x, maxVertex.z);
+	maxVertex.y = fmax(v.y, maxVertex.y);
+	maxVertex.z = fmax(v.z, maxVertex.z);
 }
 
 void IcospherePatch::addNoiseToPatch(){
-	float scale = 305.1f;
+	float scale = 405.1f;
     float lacunarity = 1.5f;
     float persistance = 0.55f;
 	const SimplexNoise noise1(scale, 0.5f, lacunarity, persistance);
 	const SimplexNoise noise2(500.0f, 0.5f, 0.1f, 0.9f);
 
+	float l1Scale = 0.005f; 
+	float l2Scale = 0.6f; 
+
 	for (int i = 0; i < vertices.size(); i++) {
-		float noiseHeight = 5.0f * noise1.noise(0.1f *vertices[i].position.x,0.1f * vertices[i].position.y, 0.1f *vertices[i].position.z);
-		noiseHeight += 0.6f*noise2.noise(0.7f *vertices[i].position.x, 0.7f *vertices[i].position.y, 0.7f *vertices[i].position.z);
-		vertices[i].position = vertices[i].position + glm::vec3(noiseHeight); 
+		float noiseHeight = 7.0f * noise1.noise(l1Scale *vertices[i].position.x, l1Scale * vertices[i].position.y, l1Scale *vertices[i].position.z);
+		noiseHeight += 4.5f*noise2.noise(l2Scale *vertices[i].position.x, l2Scale *vertices[i].position.y, l2Scale *vertices[i].position.z) * noise2.noise(l2Scale *vertices[i].position.x, l2Scale *vertices[i].position.y, l2Scale *vertices[i].position.z);
+		vertices[i].position += vertices[i].position * fmax( 0.002f * noiseHeight, -0.002f); 
 	}
 }
 
@@ -117,36 +123,12 @@ unsigned int IcospherePatch::GetVertexNumber() {
 	return (unsigned int)vertices.size(); 
 };
 
-float DistancePlaneToPoint(glm::vec3 center, glm::vec3 extents, glm::vec4 plane) {
-	glm::vec3 n = glm::abs(glm::vec3(plane.x, plane.y, plane.z));
-	float r = glm::dot(extents, n);
-	float s = glm::dot(glm::vec4(center, 1.0f), plane);
-	// std::cout << s+r << "\n"; 
-	return s + r;
-}
-
-bool AABBOutsideFrustumTest(glm::vec3 left, glm::vec3 right, glm::vec4 planes[6]) {
-	for(int i = 0; i < 6; i++) {
-		if (DistancePlaneToPoint(left, right, planes[i]) < 0.0f){
-			return true;
-		}
-  	}
-  	return false;
-}
-
 void IcospherePatch::Update(const EngineCamera& camera){
 	float orientedAngle = glm::orientedAngle(glm::normalize(camera.GetPosition()), 
 											faceNormal,
                            					glm::normalize(glm::cross(camera.GetPosition(), faceNormal))); 
-	
-	std::vector<glm::vec4> p = camera.GetFrustumPlanes(); 
 
-	glm::mat4 mvp = camera.GetProjectionMatrix() * camera.GetViewMatrix();
-	glm::vec4 v4Min = mvp * glm::vec4(minVertex.x, minVertex.y, minVertex.z, 0.0f);
-	glm::vec4 v4Max = mvp * glm::vec4(maxVertex.x, maxVertex.y, maxVertex.z, 0.0f);
-	glm::vec3 v3Min = glm::vec3(v4Min.x, v4Min.y, v4Min.z);
-	glm::vec3 v3Max = glm::vec3(v4Max.x, v4Max.y, v4Max.z);
-	bool outOfFrustrum = AABBOutsideFrustumTest(v3Min, v3Max, p.data()); 
-	// frustrumCulled = outOfFrustrum; 
-	SetFrustrumCulled(orientedAngle > glm::radians(90.0f));
+	bool inFrustrum = camera.BoxIsVisible(minVertex, maxVertex); 
+	frustrumCulled = orientedAngle > glm::radians(90.0f);// || !inFrustrum; 
+	SetFrustrumCulled(frustrumCulled);
 }

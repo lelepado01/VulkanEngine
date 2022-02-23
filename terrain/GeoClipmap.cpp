@@ -67,7 +67,7 @@ void GeoClipmap::createBlock(int xStart, int yStart, int lod){
         for (int y = 0; y <= verticesPerSide; y++) {
             int xPos = xStart + x*distanceBetweenVertices;
             int yPos = yStart + y*distanceBetweenVertices;
-            vertices.push_back({{xPos, 0, yPos}, {0,0,0}, lod});
+            vertices.push_back({{xPos, 0, yPos}, {0,0,0}});
         }
     }
     

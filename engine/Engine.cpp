@@ -37,6 +37,9 @@ Engine::Engine(){
     
     terrainRenderSystem = std::make_unique<TerrainRenderSystem>(device, renderer.GetSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout());    
     simpleRenderSystem = std::make_unique<SimpleRenderSystem>(device, renderer.GetSwapChainRenderPass(), globalSetLayout->getDescriptorSetLayout());
+
+	// computeSystem = std::make_unique<ComputeSystem>(device, renderer.GetSwapChainRenderPass());
+
 }
 
 Engine::~Engine(){}
@@ -48,19 +51,33 @@ void Engine::Update(){
     EngineTime::Update();
 }
 
+bool initial = true; 
 void Engine::Draw(EngineCamera& camera){
     
     if (auto commandBuffer = renderer.BeginFrame()){
         int frameIndex = renderer.GetFrameIndex();
 
+		// if (initial){
+		// 	initial = false; 
+		// 	ComputeFrameInfo computeFrameInfo{
+		// 		frameIndex,
+		// 		EngineTime::DeltaTime(),
+		// 		commandBuffer,
+		// 		camera,
+		// 		globalDescriptorSets[frameIndex],
+		// 		GetGameObjects(GameObjectTag::SIMPLE)
+		// 	};
+		// 	computeSystem->RunCompute(computeFrameInfo);
+		// }
+
         GlobalUniformBuffer ubo{};
         ubo.terrainMaterial = EngineSettings::TerrainMaterialParams;
         ubo.light = EngineSettings::LightParams;
 		
-		std::vector<glm::vec4> p = camera.GetFrustumPlanes(); 
-		for (int i = 0; i < 6; i++){
-			ubo.frustumPlanes[i] = p[i]; 
-		}
+		// std::vector<glm::vec4> p = camera.GetFrustumPlanes(); 
+		// for (int i = 0; i < 6; i++){
+		// 	ubo.frustumPlanes[i] = p[i]; 
+		// }
         
 		globalUniformBuffers[frameIndex]->writeToBuffer(&ubo);
 		globalUniformBuffers[frameIndex]->flush();

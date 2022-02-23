@@ -18,6 +18,7 @@
 
 #include "EngineInput.h"
 #include "EngineSettings.h"
+#include "Frustum.h"
 
 class EngineCamera {
 private:
@@ -37,6 +38,8 @@ private:
     glm::mat4 projectionMatrix;
     glm::mat4 viewMatrix;
     
+	Frustum cameraFrustum; 
+
 public:
     
 private:
@@ -53,10 +56,10 @@ public:
     const glm::vec3& GetPosition() const { return position; };
     const glm::vec3& GetDirection() const { return direction; };
 
-    void Update(float deltaTime);        
+    void Update(float deltaTime); 
     void SetViewDirection(glm::vec3 position, glm::vec3 direction, glm::vec3 up);
 
-	std::vector<glm::vec4> GetFrustumPlanes() const; 
+	bool BoxIsVisible(glm::vec3 minVertex, glm::vec3 maxVertex) const; 
 
 };
 

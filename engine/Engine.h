@@ -31,6 +31,7 @@
 #include "EngineSettings.h"
 #include "systems/SimpleRenderSystem.h"
 #include "systems/TerrainRenderSystem.h"
+#include "systems/ComputeSystem.h"
 
 struct GlobalUniformBuffer {
     Light light;
@@ -47,6 +48,7 @@ private:
     
     std::unique_ptr<SimpleRenderSystem> simpleRenderSystem{};
     std::unique_ptr<TerrainRenderSystem> terrainRenderSystem{};
+    // std::unique_ptr<ComputeSystem> computeSystem{};
     
     std::unique_ptr<EngineDescriptorPool> globalPool{}; 
     std::vector<std::unique_ptr<EngineBuffer>> globalUniformBuffers = std::vector<std::unique_ptr<EngineBuffer>>(EngineSwapChain::MAX_FRAMES_IN_FLIGHT);

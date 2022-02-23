@@ -31,4 +31,14 @@ struct TerrainRenderFrameInfo {
 };
 
 
+struct ComputeFrameInfo {
+    int frameInfo;
+    float frameTime;
+    VkCommandBuffer commandBuffer;
+    EngineCamera& camera;
+    VkDescriptorSet globalDescriptorSet;
+    EngineGameObject::Map &gameObjects; 
+};
+
+
 #endif /* EngineFrameInfo_h */
