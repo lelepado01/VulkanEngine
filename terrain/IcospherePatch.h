@@ -21,6 +21,9 @@ class IcospherePatch {
 public:
     glm::vec3 faceNormal; 
 
+	// VkImage displacementTexture; 
+	// VkDeviceMemory& displacementTextureMemory;
+
 	bool frustrumCulled = false; 
 
 private:
@@ -40,6 +43,7 @@ private:
     void subdivideTriangle(glm::vec3 a, glm::vec3 b, glm::vec3 c, int subdivisionLevel);
     void addVertexAndIndex(glm::vec3 v); 
     void addNoiseToPatch(); 
+	void createDisplacementTexture(Engine& engine); 
 	void updateMinMax(glm::vec3 v); 
 	void recalculateNormals(); 
 	glm::vec3 computeVertexNormal(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c);

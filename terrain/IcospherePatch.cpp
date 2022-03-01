@@ -43,6 +43,74 @@ void IcospherePatch::addVertexAndIndex(glm::vec3 v){
     indices.push_back(indexVertexPair[v]);
 }
 
+void IcospherePatch::createDisplacementTexture(Engine& engine){
+
+	// uint8_t pixels[10][10];
+	// for (int x = 0; x < 10; x++) {
+	// 	for (int y = 0; y < 10; y++) {
+	// 		pixels[x][y] = rand() % 10; 
+	// 	}
+	// }
+	 
+
+	// int texWidth = 10;
+	// int texHeight = 10; 
+    // // stbi_uc* pixels = stbi_load("texture.jpg", &texWidth, &texHeight, &texChannels, STBI_rgb_alpha);
+    // VkDeviceSize imageSize = texWidth * texHeight;
+
+    // // if (!pixels) {
+    // //     throw std::runtime_error("failed to load texture image!");
+    // // }
+
+    // VkBuffer stagingBuffer;
+    // VkDeviceMemory stagingBufferMemory;
+    // createBuffer(imageSize, 
+	// 	VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+	// 	VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, 
+	// 	stagingBuffer, 
+	// 	stagingBufferMemory);
+
+    // void* data;
+    // vkMapMemory(engine.GetDevice(), stagingBufferMemory, 0, imageSize, 0, &data);
+    // memcpy(data, pixels, static_cast<size_t>(imageSize));
+    // vkUnmapMemory(engine.GetDevice(), stagingBufferMemory);
+
+
+	// VkImageCreateInfo imageInfo{};
+	// imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+	// imageInfo.imageType = VK_IMAGE_TYPE_2D;
+	// imageInfo.extent.width = static_cast<uint32_t>(texWidth);
+	// imageInfo.extent.height = static_cast<uint32_t>(texHeight);
+	// imageInfo.extent.depth = 1;
+	// imageInfo.mipLevels = 1;
+	// imageInfo.arrayLayers = 1;
+	// imageInfo.format = VK_FORMAT_R8_SRGB;
+	// imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+	// imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	// imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+	// imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+	// imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+	// imageInfo.flags = 0; // Optional
+
+	// if (vkCreateImage(engine.GetDevice(), &imageInfo, nullptr, &displacementTexture) != VK_SUCCESS) {
+	// 	throw std::runtime_error("failed to create texture!");
+	// }
+
+	// VkMemoryRequirements memRequirements;
+    // vkGetImageMemoryRequirements(engine.GetDevice(), displacementTexture, &memRequirements);
+
+    // VkMemoryAllocateInfo allocInfo{};
+    // allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    // allocInfo.allocationSize = memRequirements.size;
+    // allocInfo.memoryTypeIndex = findMemoryType(memRequirements.memoryTypeBits, properties);
+
+    // if (vkAllocateMemory(engine.GetDevice(), &allocInfo, nullptr, &displacementTextureMemory) != VK_SUCCESS) {
+    //     throw std::runtime_error("failed to allocate image memory!");
+    // }
+
+    // vkBindImageMemory(engine.GetDevice(), displacementTexture, displacementTextureMemory, 0);
+}
+
 void IcospherePatch::updateMinMax(glm::vec3 v){
 	minVertex.x = fmin(v.x, minVertex.x);
 	minVertex.y = fmin(v.y, minVertex.y);

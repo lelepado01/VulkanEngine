@@ -36,7 +36,8 @@
 struct GlobalUniformBuffer {
     Light light;
 	TerrainMaterial terrainMaterial;
-	glm::vec4 frustumPlanes[6];
+	// glm::vec4 frustumPlanes[6];
+	AtmosphereData atmosphereData; 
 };
 
 
@@ -76,6 +77,7 @@ public:
     bool IsRunning() { return window.IsRunning(); };
     
     float GetWindowAspectRatio() { return renderer.GetAspectRatio(); };
+    VkDevice GetDevice() { return device.device(); };
 };
 
 #endif /* Engine_hpp */
