@@ -19,10 +19,12 @@
 #include "../EngineGameObject.h"
 #include "../EngineCamera.h"
 #include "../EngineFrameInfo.h"
+#include "../EngineTime.h"
 
 struct TerrainPushConstantData {
     glm::mat4 PVMatrix{};
     glm::vec3 cameraPosition{};
+	int time; 
 };
 
 class TerrainRenderSystem {

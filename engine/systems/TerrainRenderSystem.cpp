@@ -75,7 +75,8 @@ void TerrainRenderSystem::RenderGameObjects(TerrainRenderFrameInfo& frameInfo){
         TerrainPushConstantData push{};
         push.cameraPosition = frameInfo.camera.GetPosition();
         push.PVMatrix = frameInfo.camera.GetProjectionMatrix() * frameInfo.camera.GetViewMatrix(); 
-        
+        push.time = EngineTime::GetTime(); 
+
         vkCmdPushConstants(frameInfo.commandBuffer,
                            pipelineLayout,
                            VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT | VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,

@@ -22,6 +22,10 @@ private:
 public:
     static void Update();
     
+	static int GetTime() { 
+		auto duration = std::chrono::system_clock::now().time_since_epoch();
+		return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+  	};
     static float DeltaTime() { return deltaTime; };
     static float FramesPerSecond() { return 1 / deltaTime; };
 };

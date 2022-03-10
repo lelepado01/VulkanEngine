@@ -147,8 +147,10 @@ vec3 barycentric(vec3 p, vec3 a, vec3 b, vec3 c) {
 void main() {
     gl_Position = interpolate(gl_in[0].gl_Position, gl_in[1].gl_Position, gl_in[2].gl_Position);
 
-	float noiseHeight = 0.00005f * snoise(0.1f * gl_Position.xyz) + 0.0006f * snoise(0.2f * gl_Position.xyz); 
-	gl_Position = gl_Position + noiseHeight;
+	if (distance(gl_Position.xyz, vec3(0,0,0)) > 998){
+		float noiseHeight = 0.00005f * snoise(0.1f * gl_Position.xyz) + 0.0006f * snoise(0.2f * gl_Position.xyz); 
+		gl_Position = gl_Position + noiseHeight;
+	}
 
 	vec3 triangleBaricentricCoords = barycentric(gl_Position.xyz, gl_in[0].gl_Position.xyz, gl_in[1].gl_Position.xyz, gl_in[2].gl_Position.xyz); 
 
