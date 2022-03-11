@@ -153,11 +153,11 @@ vec3 dist(vec3 x, vec3 y, vec3 z,  bool manhattanDistance) {
 }
 
 vec2 worley(vec3 P, float jitter, bool manhattanDistance) {
-float K = 0.142857142857; // 1/7
-float Ko = 0.428571428571; // 1/2-K/2
-float  K2 = 0.020408163265306; // 1/(7*7)
-float Kz = 0.166666666667; // 1/6
-float Kzo = 0.416666666667; // 1/2-1/6*2
+	float K = 0.142857142857; // 1/7
+	float Ko = 0.428571428571; // 1/2-K/2
+	float  K2 = 0.020408163265306; // 1/(7*7)
+	float Kz = 0.166666666667; // 1/6
+	float Kzo = 0.416666666667; // 1/2-1/6*2
 
 	vec3 Pi = mod(floor(P), 289.0);
  	vec3 Pf = fract(P) - 0.5;
@@ -298,13 +298,27 @@ float Kzo = 0.416666666667; // 1/2-1/6*2
 }
 
 
+float toPerc(float val, float m, float M){
+	return (val-m) / (M-m); 
+}
+
+
 vec4 getWaterAnimation(){
-	int maxTime = 100; 
-	float r = maxTime - abs((push.time % (maxTime)) - 2*maxTime);
-	vec2 F = worley(vertexPosition* 0.1f, 1.0f, false);
-	vec4 color = FoamColor;
-	if (F.y-F.x > 0.05f) color = DeepWaterColor;
-	return color; 
+
+	float transitionSize = 50;
+	float waterAnimationMaxDistance = 100; 
+	float waterAnimationMinDistance = waterAnimationMaxDistance - transitionSize; 
+
+	float vertDistance = distance(push.cameraPosition, vertexPosition); 
+	if (vertDistance > waterAnimationMaxDistance) return DeepWaterColor; 
+
+	vec2 F = worley(vertexPosition * 2.0f, 0.9f, false);
+
+	if (F.y-F.x < 0.05f && vertDistance < waterAnimationMaxDistance && vertDistance > waterAnimationMinDistance) return mix(FoamColor, DeepWaterColor, toPerc(vertDistance, waterAnimationMinDistance, waterAnimationMaxDistance));
+
+	if (F.y-F.x < 0.05f) return FoamColor;
+
+	return DeepWaterColor; 
 }
 
 vec4 getColor(float height){
