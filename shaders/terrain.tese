@@ -16,10 +16,9 @@ layout (push_constant) uniform Push {
 } push;
 
 
-vec4 interpolate(vec4 a, vec4 b, vec4 c){
-    return gl_TessCoord.x * a + gl_TessCoord.y * b + gl_TessCoord.z * c;
-}
-
+// 
+// Snoise functions
+//
 //
 // Description : Array and textureless GLSL 2D/3D/4D simplex 
 //               noise functions.
@@ -31,7 +30,6 @@ vec4 interpolate(vec4 a, vec4 b, vec4 c){
 //               https://github.com/ashima/webgl-noise
 //               https://github.com/stegu/webgl-noise
 // 
-
 vec3 mod289(vec3 x) {
   return x - floor(x * (1.0 / 289.0)) * 289.0;
 }
@@ -117,28 +115,14 @@ float snoise(vec3 v) {
   return 105.0 * dot( m*m, vec4( dot(p0,x0), dot(p1,x1), 
                                 dot(p2,x2), dot(p3,x3) ) );
 }
-vec3 barycentric(vec3 p, vec3 a, vec3 b, vec3 c) {
-	float u; 
-	float v; 
-	float w; 
-
-    vec3 v0 = b - a; 
-	vec3 v1 = c - a; 
-	vec3 v2 = p - a;
-    float d00 = dot(v0, v0);
-    float d01 = dot(v0, v1);
-    float d11 = dot(v1, v1);
-    float d20 = dot(v2, v0);
-    float d21 = dot(v2, v1);
-    float denom = d00 * d11 - d01 * d01;
-    v = (d11 * d20 - d01 * d21) / denom;
-    w = (d00 * d21 - d01 * d20) / denom;
-    u = 1.0f - v - w;
-
-	return vec3(u, v,  w); 
-}
+// 
+// End Snoise functions
+//
 
 
+//
+// Water Functions
+// 
 const float pi = 3.14159;
 int numWaves = 4;
 float amplitude[4] = {0.5f / 10, 0.5f / 20, 0.5f / 30, 0.5f / 40};
@@ -187,6 +171,36 @@ vec3 waveNormal(float x, float y) {
     }
     vec3 n = vec3(-dx, -dy, 1.0);
     return normalize(n);
+}
+
+//
+// End Water Functions
+//
+
+
+vec4 interpolate(vec4 a, vec4 b, vec4 c){
+    return gl_TessCoord.x * a + gl_TessCoord.y * b + gl_TessCoord.z * c;
+}
+
+vec3 barycentric(vec3 p, vec3 a, vec3 b, vec3 c) {
+	float u; 
+	float v; 
+	float w; 
+
+    vec3 v0 = b - a; 
+	vec3 v1 = c - a; 
+	vec3 v2 = p - a;
+    float d00 = dot(v0, v0);
+    float d01 = dot(v0, v1);
+    float d11 = dot(v1, v1);
+    float d20 = dot(v2, v0);
+    float d21 = dot(v2, v1);
+    float denom = d00 * d11 - d01 * d01;
+    v = (d11 * d20 - d01 * d21) / denom;
+    w = (d00 * d21 - d01 * d20) / denom;
+    u = 1.0f - v - w;
+
+	return vec3(u, v,  w); 
 }
 
 void main() {
