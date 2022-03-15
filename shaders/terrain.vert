@@ -46,6 +46,7 @@ layout (set = 0, binding = 0) uniform GlobalUniformBuffer {
 layout (push_constant) uniform Push {
     mat4 PVMatrix;
     vec3 cameraPosition;
+	int time; 
 } push;
 
 

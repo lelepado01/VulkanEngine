@@ -305,18 +305,18 @@ float toPerc(float val, float m, float M){
 
 vec4 getWaterAnimation(){
 
-	float transitionSize = 50;
-	float waterAnimationMaxDistance = 100; 
-	float waterAnimationMinDistance = waterAnimationMaxDistance - transitionSize; 
+	// float transitionSize = 50;
+	// float waterAnimationMaxDistance = 100; 
+	// float waterAnimationMinDistance = waterAnimationMaxDistance - transitionSize; 
 
-	float vertDistance = distance(push.cameraPosition, vertexPosition); 
-	if (vertDistance > waterAnimationMaxDistance) return DeepWaterColor; 
+	// float vertDistance = distance(push.cameraPosition, vertexPosition); 
+	// if (vertDistance > waterAnimationMaxDistance) return DeepWaterColor; 
 
-	vec2 F = worley(vertexPosition * 2.0f, 0.9f, false);
+	// vec2 F = worley(vertexPosition * 2.0f, 0.9f, false);
 
-	if (F.y-F.x < 0.05f && vertDistance < waterAnimationMaxDistance && vertDistance > waterAnimationMinDistance) return mix(FoamColor, DeepWaterColor, toPerc(vertDistance, waterAnimationMinDistance, waterAnimationMaxDistance));
+	// if (F.y-F.x < 0.05f && vertDistance < waterAnimationMaxDistance && vertDistance > waterAnimationMinDistance) return mix(FoamColor, DeepWaterColor, toPerc(vertDistance, waterAnimationMinDistance, waterAnimationMaxDistance));
 
-	if (F.y-F.x < 0.05f) return FoamColor;
+	// if (F.y-F.x < 0.05f) return FoamColor;
 
 	return DeepWaterColor; 
 }
