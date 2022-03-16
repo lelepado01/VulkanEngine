@@ -38,7 +38,6 @@ struct AtmosphereData {
 layout (set = 0, binding = 0) uniform GlobalUniformBuffer {
     Light lightParams;
     TerrainMaterial terrainMaterialParams;
-	// vec4 frustumPlanes[6]; 
 	AtmosphereData atmosphereParams; 
 } ubo;
 
@@ -49,11 +48,6 @@ layout (push_constant) uniform Push {
 	int time; 
 } push;
 
-
-float scale(float fCos) {
-	float x = 1.0 - fCos;
-	return ubo.atmosphereParams.fScaleDepth * exp(-0.00287 + x*(0.459 + x*(3.83 + x*(-6.80 + x*5.25))));
-}
 
 void main() {
 	vertexNormal = normal;  

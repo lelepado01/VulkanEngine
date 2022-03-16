@@ -172,7 +172,6 @@ vec3 waveNormal(float x, float y) {
     vec3 n = vec3(-dx, -dy, 1.0);
     return normalize(n);
 }
-
 //
 // End Water Functions
 //

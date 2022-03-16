@@ -9,6 +9,7 @@ layout (location = 0) out vec3 vertexNormalOut[];
 layout (push_constant) uniform Push {
     mat4 PVMatrix;  
     vec3 cameraPosition;
+	int time; 
 } push;
 
 struct TerrainMaterial {
@@ -45,7 +46,6 @@ struct AtmosphereData {
 layout (set = 0, binding = 0) uniform GlobalUniformBuffer {
     Light lightParams;
     TerrainMaterial terrainMaterialParams;
-	// vec4 frustumPlanes[6]; 
 	AtmosphereData atmosphereParams; 
 } ubo;
 
