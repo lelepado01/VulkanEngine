@@ -15,7 +15,7 @@ int main() {
 
     StatusPrinter statusPrinter; 
 
-	float rotationAngle = 0.01f;  
+	float rotationAngle = 0.01f;
 
     while (engine.IsRunning()) {
         engine.Update();

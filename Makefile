@@ -37,6 +37,7 @@ NAME = VulkanEngine
 
 $(NAME): main.cpp $(OBJ_FILES) $(OBJ_SHADER)
 	$(CXX) -o $(NAME) $(CFLAGS) $(OBJ_FILES) main.cpp $(LDFLAGS)
+	clear
 
 .PHONY: run clean
 
