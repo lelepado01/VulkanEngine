@@ -4,18 +4,20 @@
 #include <sys/ioctl.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <unordered_map>
 
 class StatusPrinter {
 private:
     int counter = 0;
     int printIterval = 100; 
-
 	int terminalWidth = -1;
 	int terminalHeight = -1;
+	
 	std::string separator; 
 
+	std::unordered_map<std::string, int> variableDataDictionary; 
+
 private: 
-	int calculateTriangles(int n);  
 	int getWindowSize();  
 	void updateSeparator(); 
 
@@ -26,6 +28,7 @@ public:
 	void Clear(); 
 	void Separator(); 
 
-    void Print(unsigned int vertexNumber, float fps); 
-    void Print(unsigned int vertexNumber, unsigned int culledFaces, float fps); 
+    void Print(); 
+
+	void AddParam(std::string name, int value); 
 };

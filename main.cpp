@@ -7,6 +7,12 @@
 
 #include "utils/StatusPrinter.h"
  
+int calculateTriangles(int n) {    
+    if(n < 0)   return 1;    
+    if(n == 0)  return 0;
+    return ((2*n -2) *3) + calculateTriangles(n-2);   
+}
+
 int main() {
     Engine engine;
     
@@ -23,7 +29,11 @@ int main() {
 		EngineSettings::LightParams.direction = glm::rotate(EngineSettings::LightParams.direction, glm::radians(rotationAngle), glm::vec3(0,0,1)); 
         EngineSettings::LightParams.direction = glm::rotate(EngineSettings::LightParams.direction, glm::radians(rotationAngle), glm::vec3(1,0,0)); 
 
-        statusPrinter.Print(clipmap.GetVertexNumber(), clipmap.GetCulledFacesNumber(), EngineTime::FramesPerSecond()); 
+		statusPrinter.AddParam(std::string("Vertex Num"), clipmap.GetVertexNumber()); 
+		statusPrinter.AddParam(std::string("Total Vertex Num"), clipmap.GetVertexNumber() * calculateTriangles(4)); 
+		statusPrinter.AddParam(std::string("Culled Faces"), clipmap.GetCulledFacesNumber()); 
+		statusPrinter.AddParam(std::string("FPS"), EngineTime::FramesPerSecond()); 
+        statusPrinter.Print(); 
         
         float frameTime = EngineTime::DeltaTime();
         camera.Update(frameTime);
