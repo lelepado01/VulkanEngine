@@ -18,7 +18,7 @@ private:
 	std::unordered_map<std::string, int> variableDataDictionary; 
 
 private: 
-	int getWindowSize();  
+	void getWindowSize();  
 	void updateSeparator(); 
 
 public:

@@ -8,7 +8,7 @@ StatusPrinter::StatusPrinter(){
 
 StatusPrinter::~StatusPrinter(){}
 
-int StatusPrinter::getWindowSize(){
+void StatusPrinter::getWindowSize(){
 	int cols = 80;
     int lines = 24;
 
