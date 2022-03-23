@@ -44,7 +44,7 @@ class EngineSettings {
 private:
     
 public:
-    inline static bool DrawWireframe = false;
+    inline static bool DrawWireframe = true;
     inline static int MaxSubdivisions = 6;
     inline static float SphereRadius = 1000;
     inline static float CameraSpeed = 100;

@@ -66,6 +66,7 @@ const vec4 SnowColor = vec4(1,1,1,1);
 const vec4 FoamColor = vec4(0.5,0.8,1,1);
 
 const float M_PI = 3.14159265359; 
+const float WATER_LEVEL = 998; 
 
 
 float norm(vec3 v){
@@ -82,7 +83,7 @@ vec4 getWaterAnimation(){
 
 vec4 getColor(float height){
 
-	if (height < 998) return getWaterAnimation();
+	if (height < WATER_LEVEL) return getWaterAnimation();
 	
 	float terrainSlope = angle(normalize(vertexPosition), normalize(vertexNormal)); 
 	float slopePerc = 2*terrainSlope / M_PI; 
@@ -165,7 +166,7 @@ vec3 calculateLight(vec3 rayOrigin, vec3 rayDirection, float rayLength, vec3 ori
 
 vec4 getTerrainBaseColor(){
 	vec3 norm; 
-	if (vertexHeight > 998) {
+	if (vertexHeight > WATER_LEVEL) {
 		norm = mix(getFaceNormal(vertexPosition), normalize(vertexNormal), 0.9f);
 	} else {
 		norm = mix(getFaceNormal(vertexPosition), normalize(vertexNormal), 0.05f);
