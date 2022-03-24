@@ -46,12 +46,22 @@ Engine::~Engine(){}
 
 void Engine::Update(){
     glfwPollEvents();
+
+	updateWindowTitle(); 
     
     EngineInput::Update();
     EngineTime::Update();
 }
 
-bool initial = true; 
+
+void Engine::updateWindowTitle(){
+	char title[256];
+	sprintf(title, "Vulkan Renderer | FPS: %.2f",EngineTime::FramesPerSecond()); 
+	glfwSetWindowTitle(window.GetGLFWwindow(), title);
+}
+
+
+// bool initial = true; 
 void Engine::Draw(EngineCamera& camera){
     
     if (auto commandBuffer = renderer.BeginFrame()){

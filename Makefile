@@ -12,7 +12,12 @@ ONLY_HEADERS = 	engine/EngineUtils.h \
 SRC_FILES = $(subst ./main.cpp,,$(shell find . -type f -name "*.cpp"))
 OBJ_FILES = $(subst .cpp,.o,$(SRC_FILES))
 
-SRC_SHADER = $(shell find . -type f -name "*.vert") $(shell find . -type f -name "*.frag") $(shell find . -type f -name "*.tese") $(shell find . -type f -name "*.tesc") $(shell find . -type f -name "*.comp")
+SRC_SHADER = 	$(shell find . -type f -name "*.vert") \
+				$(shell find . -type f -name "*.frag") \
+				$(shell find . -type f -name "*.tese") \
+				$(shell find . -type f -name "*.tesc") \
+				$(shell find . -type f -name "*.comp")
+				
 OBJ_SHADER = $(addsuffix .spv,$(SRC_SHADER))
 
 NAME = VulkanEngine

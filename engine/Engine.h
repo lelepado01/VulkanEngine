@@ -56,7 +56,10 @@ private:
     std::vector<VkDescriptorSet> globalDescriptorSets = std::vector<VkDescriptorSet>(EngineSwapChain::MAX_FRAMES_IN_FLIGHT);
 
     std::vector<EngineGameObject::Map> gameObjects = std::vector<EngineGameObject::Map>(GameObjectTag::Number);
-            
+
+private: 
+	void updateWindowTitle(); 
+
 public:
     Engine();
     ~Engine();
