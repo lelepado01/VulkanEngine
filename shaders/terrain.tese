@@ -217,7 +217,7 @@ void main() {
 
     vertexNormal = triangleBaricentricCoords.x * vertexNormalIn[0] + triangleBaricentricCoords.y * vertexNormalIn[1] + triangleBaricentricCoords.z * vertexNormalIn[2];
     vertexPosition = gl_Position.xyz;
-    vertexHeight = distance(gl_Position.xyz, vec3(0,0,0));
+    vertexHeight = distance(vertexPosition, vec3(0,0,0));
     
     gl_Position = push.PVMatrix * gl_Position;
 }
