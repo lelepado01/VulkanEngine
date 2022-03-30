@@ -36,8 +36,6 @@
 struct GlobalUniformBuffer {
     Light light;
 	TerrainMaterial terrainMaterial;
-	// glm::vec4 frustumPlanes[6];
-	AtmosphereData atmosphereData; 
 };
 
 

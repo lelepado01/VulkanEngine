@@ -83,31 +83,6 @@ void Engine::Draw(EngineCamera& camera){
         GlobalUniformBuffer ubo{};
         ubo.terrainMaterial = EngineSettings::TerrainMaterialParams;
         ubo.light = EngineSettings::LightParams;
-		
-		float PI = 3.14;
-		float m_Kr = 0.0025f;		// Rayleigh scattering constant
-		float m_Kr4PI = m_Kr*4.0f*PI;
-		float m_Km = 0.0010f;		// Mie scattering constant
-		float m_Km4PI = m_Km*4.0f*PI;
-		float m_ESun = 20.0f;		// Sun brightness constant
-
-		ubo.atmosphereData.v3cameraDir = camera.GetDirection();  
-		ubo.atmosphereData.v3LightPos = glm::vec3(3000,0,0); 
-		ubo.atmosphereData.v3InvWavelength = glm::vec3(0.650f, 0.570f, 0.475f);
-		ubo.atmosphereData.fCameraHeight = glm::distance(camera.GetPosition(), glm::vec3(0,0,0));
-		ubo.atmosphereData.fOuterRadius = 1100.0f;	
-		ubo.atmosphereData.fInnerRadius = 1000.0f;	
-		ubo.atmosphereData.fKrESun = m_Kr*m_ESun;
-		ubo.atmosphereData.fKmESun = m_Km*m_ESun;
-		ubo.atmosphereData.fKr4PI = m_Kr4PI; 
-		ubo.atmosphereData.fKm4PI = m_Km4PI;
-		ubo.atmosphereData.fScale = 1 / (ubo.atmosphereData.fOuterRadius - ubo.atmosphereData.fInnerRadius);
-		ubo.atmosphereData.fScaleDepth = 1050.0f; 
-
-		// std::vector<glm::vec4> p = camera.GetFrustumPlanes(); 
-		// for (int i = 0; i < 6; i++){
-		// 	ubo.frustumPlanes[i] = p[i]; 
-		// }
         
 		globalUniformBuffers[frameIndex]->writeToBuffer(&ubo);
 		globalUniformBuffers[frameIndex]->flush();

@@ -25,21 +25,6 @@ struct Light {
     alignas(16) glm::vec3 specular;
 };
 
-struct AtmosphereData {
-	alignas(16) glm::vec3 v3cameraDir;
-	alignas(16) glm::vec3 v3LightPos;		// The direction vector to the light source
-	alignas(16) glm::vec3 v3InvWavelength;	// 1 / pow(wavelength, 4) for the red, green, and blue channels
-	alignas(4) float fCameraHeight;	// The camera's current height
-	alignas(4) float fOuterRadius;		// The outer (atmosphere) radius
-	alignas(4) float fInnerRadius;		// The inner (planetary) radius
-	alignas(4) float fKrESun;			// Kr * ESun
-	alignas(4) float fKmESun;			// Km * ESun
-	alignas(4) float fKr4PI;			// Kr * 4 * PI
-	alignas(4) float fKm4PI;			// Km * 4 * PI
-	alignas(4) float fScale;			// 1 / (fOuterRadius - fInnerRadius)
-	alignas(4) float fScaleDepth;		// The scale depth (i.e. the altitude at which the atmosphere's average density is found)
-};
-
 class EngineSettings {
 private:
     
