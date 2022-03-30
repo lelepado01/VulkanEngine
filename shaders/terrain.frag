@@ -1,4 +1,3 @@
-
 #version 450
 
 layout (location = 0) in float vertexHeight;
@@ -36,9 +35,9 @@ layout (push_constant) uniform Push {
 // 
 // FOG CONSTs
 //
-const float FogMax = 300.0;
-const float FogMin = 150.0;
-const float MaxFogPerc = 0.2; 
+const float FogMax = 500.0;
+const float FogMin = 300.0;
+const float MaxFogPerc = 0.1; 
 
 //
 // TERRAIN COLOR CONSTs
@@ -53,13 +52,17 @@ const vec4 SnowColor = vec4(1,1,1,1);
 const vec4 FoamColor = vec4(0.5,0.8,1,1);
 
 const float WATER_LEVEL = 998; 
+const float SAND_LEVEL = 1000; 
+const float LIGHT_GRASS_LEVEL = 1010; 
+const float DARK_GRASS_LEVEL = 1015; 
+const float ROCK_LEVEL = 1017; 
 
 //
 // ATMOSPHERE PARAMs
 //
-const vec4 AtmBlueColor = vec4(0.0, 0.5, 1.0, 1.0); 
-const vec4 AtmRedColor = vec4(1.0, 0.5, 0.0, 1.0); 
-const float MinCameraTerrainAngle = 0.7; 
+const vec4 AtmBlueColor = vec4(0.0, 0.5, 0.7, 0.1); 
+const vec4 AtmRedColor = vec4(0.2, 0.2, 0.0, 0.1); 
+const float MinCameraTerrainAngle = 0.6; 
 const float MaxCameraTerrainAngle = 1.3; 
 
 
@@ -80,24 +83,24 @@ float norm(vec3 v){
 	return sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
 }
 
-float angle(vec3 v1, vec3 v2) {
-	return acos(dot(v1, v2) / (norm(v1)*norm(v2)));
+float getAngleBetween(vec3 v1, vec3 v2){
+	return acos(dot(v1, v2) / (norm(v1) * norm(v2)));
 }
 
 vec4 getColor(float height){
 
 	if (height < WATER_LEVEL) return DeepWaterColor;
 	
-	float terrainSlope = angle(normalize(vertexPosition), normalize(vertexNormal)); 
+	float terrainSlope = getAngleBetween(vertexPosition, vertexNormal); 
 	float slopePerc = 2*terrainSlope / M_PI; 
-	if (terrainSlope > 0.45f){
+	if (terrainSlope > 0.45f) {
 		return LightRockColor; 
 	}
 
-	if (height < 1000) return SandColor;
-	if (height < 1010) return mix(LightGrassColor, DarkRockColor, slopePerc);
-	if (height < 1015) return mix(DarkGrassColor, DarkRockColor, slopePerc);
-	if (height < 1017) return DarkRockColor;
+	if (height < SAND_LEVEL) return SandColor;
+	if (height < LIGHT_GRASS_LEVEL) return mix(LightGrassColor, DarkRockColor, slopePerc);
+	if (height < DARK_GRASS_LEVEL) return mix(DarkGrassColor, DarkRockColor, slopePerc);
+	if (height < ROCK_LEVEL) return DarkRockColor;
 
 	return SnowColor;
 }
@@ -142,10 +145,10 @@ void main() {
 	float fogFactor = getFogFactor(d); 
 	vec4 fogColor = getFogColor(fogFactor); 
 
-	float lightTerrainAngle = acos(dot(ubo.lightParams.direction, vertexPosition) / (norm(ubo.lightParams.direction) * norm(vertexPosition)));
+	float lightTerrainAngle = getAngleBetween(ubo.lightParams.direction, vertexPosition); 
 	vec4 fragAtmColor = mix(AtmBlueColor, AtmRedColor, lightTerrainAngle*1.5 / M_PI);
 
-	float cameraTerrainAngle = acos(dot(push.cameraPosition, vertexPosition) / (norm(push.cameraPosition) * norm(vertexPosition)));
+	float cameraTerrainAngle = getAngleBetween(push.cameraPosition, vertexPosition); 
 
 	float cameraTerrainAnglePerc = max(MinCameraTerrainAngle,min(cameraTerrainAngle, MaxCameraTerrainAngle)) - MinCameraTerrainAngle; 
 
