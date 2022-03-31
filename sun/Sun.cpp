@@ -3,7 +3,7 @@
 #include "Sun.h"
 
 Sun::Sun() {
-	EngineSettings::LightParams.position = glm::vec3(radiusOfOrbit,0,0); 
+	EngineSettings::LightParams.position = glm::vec3(0,radiusOfOrbit,0); 
 }
 
 void Sun::Update(float deltaTime){

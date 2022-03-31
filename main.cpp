@@ -8,11 +8,11 @@
 #include "sun/Sun.h"
 
 int main() {
+	
     Engine engine;
-    
     EngineCamera camera{glm::vec3(0.0f, -1000.0f, 0.0f), engine.GetWindowAspectRatio()};
-    IcosphereClipmap clipmap{engine};
-
+    
+	IcosphereClipmap clipmap{engine};
 	Sun sun;  
 
     while (engine.IsRunning()) {

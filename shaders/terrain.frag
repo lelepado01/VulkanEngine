@@ -37,7 +37,9 @@ layout (push_constant) uniform Push {
 //
 const float FogMax = 500.0;
 const float FogMin = 300.0;
-const float MaxFogPerc = 0.1; 
+const float MaxFogPerc = 0.3; 
+const vec4 MinFogAccent = vec4(0.1,0.1,0.1,1.0); 
+const vec4 MaxFogAccent = vec4(0.8,0.6,0.6,1.0); 
 
 //
 // TERRAIN COLOR CONSTs
@@ -132,26 +134,24 @@ float getFogFactor(float dist) {
 }
 
 vec4 getFogColor(float dist, vec3 lightDirection){
-	float redAccent = min(abs(dot(vertexPosition, lightDirection)), 50) / 50; 
-	return mix(vec4(0.3,0.3,0.3,1.0), vec4(redAccent,0.2,0.2,1.0), dist); 
+	return mix(MaxFogAccent, MinFogAccent, dist); 
 }
 
 void main() {
 	vec3 lightDirection = normalize(-ubo.lightParams.position); 
 	vec4 originalColor = getTerrainBaseColor(lightDirection);
 
-	float d = distance(push.cameraPosition, vertexPosition); 
-	float fogFactor = getFogFactor(d); 
+	float fogFactor = getFogFactor(distance(push.cameraPosition, vertexPosition)); 
 	vec4 fogColor = getFogColor(fogFactor, lightDirection); 
 
 	float lightTerrainAngle = getAngleBetween(lightDirection, vertexPosition); 
-	vec4 fragAtmColor = mix(AtmBlueColor, AtmRedColor, lightTerrainAngle*1.5 / M_PI);
+	vec4 fragAtmColor = mix(AtmRedColor, AtmBlueColor, lightTerrainAngle / (M_PI*2));
 
 	float cameraTerrainAngle = getAngleBetween(push.cameraPosition, vertexPosition); 
 
 	float cameraTerrainAnglePerc = max(MinCameraTerrainAngle,min(cameraTerrainAngle, MaxCameraTerrainAngle)) - MinCameraTerrainAngle; 
 
-	if (cameraTerrainAngle > MinCameraTerrainAngle  && cameraTerrainAngle < MaxCameraTerrainAngle){
+	if (cameraTerrainAngle > MinCameraTerrainAngle && cameraTerrainAngle < MaxCameraTerrainAngle){
 		originalColor = mix(originalColor, fragAtmColor, cameraTerrainAnglePerc);
 	} 
 
