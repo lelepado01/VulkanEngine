@@ -15,7 +15,7 @@ struct TerrainMaterial {
 };
 
 struct Light {
-    vec3 direction;
+    vec3 position;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -60,8 +60,8 @@ const float ROCK_LEVEL = 1017;
 //
 // ATMOSPHERE PARAMs
 //
-const vec4 AtmBlueColor = vec4(0.0, 0.5, 0.7, 0.1); 
-const vec4 AtmRedColor = vec4(0.2, 0.2, 0.0, 0.1); 
+const vec4 AtmBlueColor = vec4(0.0, 0.5, 0.7, 0.9); 
+const vec4 AtmRedColor = vec4(0.2, 0.2, 0.0, 0.9); 
 const float MinCameraTerrainAngle = 0.6; 
 const float MaxCameraTerrainAngle = 1.3; 
 
@@ -105,7 +105,7 @@ vec4 getColor(float height){
 	return SnowColor;
 }
 
-vec4 getTerrainBaseColor(){
+vec4 getTerrainBaseColor(vec3 lightDirection){
 	vec3 norm; 
 	if (vertexHeight > WATER_LEVEL) {
 		norm = mix(getFaceNormal(vertexPosition), normalize(vertexNormal), 0.9f);
@@ -113,12 +113,10 @@ vec4 getTerrainBaseColor(){
 		norm = mix(getFaceNormal(vertexPosition), normalize(vertexNormal), 0.05f);
 	}
 
-	vec3 lightDir = normalize(-ubo.lightParams.direction);
+	vec3 reflectDir = reflect(-lightDirection, norm);
+	float spec = pow(max(dot(lightDirection, reflectDir), 0.0f), ubo.terrainMaterialParams.shininess);
 
-	vec3 reflectDir = reflect(-lightDir, norm);
-	float spec = pow(max(dot(lightDir, reflectDir), 0.0f), ubo.terrainMaterialParams.shininess);
-
-	float diff = max(dot(norm, lightDir), 0.0f);
+	float diff = max(dot(norm, lightDirection), 0.0f);
 
 	vec3 specular = ubo.lightParams.specular * (spec * ubo.terrainMaterialParams.specular);
 	vec3 ambient = ubo.lightParams.ambient * ubo.terrainMaterialParams.ambient;
@@ -133,19 +131,20 @@ float getFogFactor(float dist) {
     return min(1 - (FogMax - dist) / (FogMax - FogMin), MaxFogPerc);
 }
 
-vec4 getFogColor(float dist){
-	float redAccent = min(abs(dot(vertexPosition, ubo.lightParams.direction)), 50) / 50; 
+vec4 getFogColor(float dist, vec3 lightDirection){
+	float redAccent = min(abs(dot(vertexPosition, lightDirection)), 50) / 50; 
 	return mix(vec4(0.3,0.3,0.3,1.0), vec4(redAccent,0.2,0.2,1.0), dist); 
 }
 
 void main() {
-	vec4 originalColor = getTerrainBaseColor();
+	vec3 lightDirection = normalize(-ubo.lightParams.position); 
+	vec4 originalColor = getTerrainBaseColor(lightDirection);
 
 	float d = distance(push.cameraPosition, vertexPosition); 
 	float fogFactor = getFogFactor(d); 
-	vec4 fogColor = getFogColor(fogFactor); 
+	vec4 fogColor = getFogColor(fogFactor, lightDirection); 
 
-	float lightTerrainAngle = getAngleBetween(ubo.lightParams.direction, vertexPosition); 
+	float lightTerrainAngle = getAngleBetween(lightDirection, vertexPosition); 
 	vec4 fragAtmColor = mix(AtmBlueColor, AtmRedColor, lightTerrainAngle*1.5 / M_PI);
 
 	float cameraTerrainAngle = getAngleBetween(push.cameraPosition, vertexPosition); 
